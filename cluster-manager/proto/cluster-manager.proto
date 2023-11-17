@@ -1,0 +1,1684 @@
+syntax = "proto3";
+
+package cms;
+
+option go_package = "github.com/datacommand2/cdm-center/cluster-manager/proto;cms";
+
+import "google/api/annotations.proto";
+import "google/protobuf/wrappers.proto";
+
+service ClusterManager {
+  // 공개키 조회
+  rpc GetPublicKey(Empty) returns (PublicKey) {
+    option (google.api.http) = {get: "/management/clusters/pbkey";};
+  }
+
+  // 클러스터 연결 확인
+  rpc CheckConnection(ClusterConnectionInfo) returns (ClusterConnectionResponse) {
+    option (google.api.http) = {post: "/management/clusters/check"; body: "*";};
+  }
+
+  // CDM-Center 동작 config 조회
+  rpc GetCenterConfig(GetCenterConfigRequest) returns (GetCenterConfigResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/config";};
+  }
+
+  // CDM-Center 동작 config 수정
+  rpc UpdateCenterConfig(UpdateCenterConfigRequest) returns (UpdateCenterConfigResponse) {
+    option (google.api.http) = {patch: "/management/clusters/{cluster_id}/config"; body: "*";};
+  }
+
+  // 클러스터 상태 확인
+  rpc CheckCluster(CheckClusterRequest) returns (CheckClusterResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/check";};
+  }
+
+  // 인증 정보 수정
+  rpc UpdateCredential(UpdateCredentialRequest) returns (UpdateCredentialResponse) {
+    option (google.api.http) = {patch: "/management/clusters/{cluster_id}/credential"; body: "*";};
+  }
+
+  // 클러스터 동기화
+  rpc SyncCluster(SyncClusterRequest) returns (SyncClusterResponse) {
+    option (google.api.http) = {post: "/management/clusters/{cluster_id}/sync";};
+  }
+
+  // 클러스터 동기화 상태 조회
+  rpc GetClusterSyncStatus(SyncClusterRequest) returns (GetClusterSyncStatusResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/sync-status";};
+  }
+
+  // 클러스터 상태 제외 대상
+  rpc SyncException(SyncExceptionRequest) returns (SyncExceptionResponse) {
+    option (google.api.http) = {post: "/management/clusters/{cluster_id}/sync-exception";};
+  }
+
+  // 클러스터 목록 조회
+  rpc GetClusterList(ClusterListRequest) returns (ClusterListResponse) {
+    option (google.api.http) = {get: "/management/clusters";};
+  }
+
+  // 클러스터 등록
+  rpc AddCluster(AddClusterRequest) returns (ClusterResponse) {
+    option (google.api.http) = {post: "/management/clusters"; body: "*";};
+  }
+
+  // 클러스터 조회
+  rpc GetCluster(ClusterRequest) returns (ClusterResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}";};
+  }
+
+  // 클러스터 수정
+  rpc UpdateCluster(UpdateClusterRequest) returns (ClusterResponse) {
+    option (google.api.http) = {patch: "/management/clusters/{cluster_id}"; body: "*";};
+  }
+
+  // 클러스터 제거
+  rpc DeleteCluster(DeleteClusterRequest) returns (DeleteClusterResponse) {
+    option (google.api.http) = {delete: "/management/clusters/{cluster_id}";};
+  }
+
+  // 클러스터 하이퍼바이저 목록 조회
+  rpc GetClusterHypervisorList(ClusterHypervisorListRequest) returns (ClusterHypervisorListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/hypervisors";};
+  }
+
+  // 클러스터 하이퍼바이저 조회
+  rpc GetClusterHypervisor(ClusterHypervisorRequest) returns (ClusterHypervisorResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/hypervisors/{cluster_hypervisor_id}";};
+  }
+
+  // 클러스터 하이퍼바이저 추가정보 수정
+  rpc UpdateClusterHypervisor(UpdateClusterHypervisorRequest) returns (ClusterHypervisorResponse) {
+    option (google.api.http) = {put: "/management/clusters/{cluster_id}/hypervisors/{cluster_hypervisor_id}"; body: "*";};
+  }
+
+  // 클러스터 가용구역 목록 조회
+  rpc GetClusterAvailabilityZoneList(ClusterAvailabilityZoneListRequest) returns (ClusterAvailabilityZoneListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/availability-zones";};
+  }
+
+  // 클러스터 가용구역 조회
+  rpc GetClusterAvailabilityZone(ClusterAvailabilityZoneRequest) returns (ClusterAvailabilityZoneResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/availability-zones/{cluster_availability_zone_id}";};
+  }
+
+  // 클러스터 테넌트 목록 조회
+  rpc GetClusterTenantList(ClusterTenantListRequest) returns (ClusterTenantListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/tenants";};
+  }
+
+  // 클러스터 테넌트 생성
+  rpc CreateClusterTenant(CreateClusterTenantRequest) returns (ClusterTenantResponse) {}
+
+  // 클러스터 테넌트 조회
+  rpc GetClusterTenant(ClusterTenantRequest) returns (ClusterTenantResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/tenants/{cluster_tenant_id}";};
+  }
+
+  // 클러스터 테넌트 조회(UUID)
+  //rpc GetClusterTenantByUUID(ClusterTenantByUUIDRequest) returns (ClusterTenantResponse) {}
+
+  // 클러스터 테넌트 제거
+  rpc DeleteClusterTenant(DeleteClusterTenantRequest) returns (DeleteClusterTenantResponse) {}
+
+  // 클러스터 테넌트 존재유무 확인(Name)
+  rpc CheckIsExistClusterTenant(CheckIsExistByNameRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 네트워크 목록 조회
+  rpc GetClusterNetworkList(ClusterNetworkListRequest) returns (ClusterNetworkListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/networks";};
+  }
+
+  // 클러스터 네트워크 생성
+  rpc CreateClusterNetwork(CreateClusterNetworkRequest) returns (ClusterNetworkResponse) {}
+
+  // 클러스터 네트워크 삭제
+  rpc DeleteClusterNetwork(DeleteClusterNetworkRequest) returns (DeleteClusterNetworkResponse) {}
+
+  // 클러스터 네트워크 조회
+  rpc GetClusterNetwork(ClusterNetworkRequest) returns (ClusterNetworkResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/networks/{cluster_network_id}";};
+  }
+
+  // 클러스터 네트워크 조회(UUID)
+  rpc GetClusterNetworkByUUID(ClusterNetworkByUUIDRequest) returns (ClusterNetworkResponse) {}
+
+  // 클러스터 서브넷 생성
+  rpc CreateClusterSubnet(CreateClusterSubnetRequest) returns (ClusterSubnetResponse) {}
+
+  // 클러스터 서브넷 삭제
+  //rpc DeleteClusterSubnet(DeleteClusterSubnetRequest) returns (DeleteClusterSubnetResponse) {}
+
+  // 클러스터 서브넷 조회
+  rpc GetClusterSubnet(ClusterSubnetRequest) returns (ClusterSubnetResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/subnets/{cluster_subnet_id}";};
+  }
+
+  // 클러스터 FloatingIP 생성
+  rpc CreateClusterFloatingIP(CreateClusterFloatingIPRequest) returns (ClusterFloatingIPResponse) {}
+
+  // 클러스터 FloatingIP 삭제
+  rpc DeleteClusterFloatingIP(DeleteClusterFloatingIPRequest) returns (DeleteClusterFloatingIPResponse) {}
+
+  // 클러스터 FloatingIP 조회
+  rpc GetClusterFloatingIP(ClusterFloatingIPRequest) returns (ClusterFloatingIPResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/floating-ips/{cluster_floating_ip_id}";};
+  }
+
+  // 클러스터 FloatingIP 존재유무 확인(IPAddress)
+  rpc CheckIsExistClusterFloatingIP(CheckIsExistClusterFloatingIPRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 라우터 생성
+  rpc CreateClusterRouter(CreateClusterRouterRequest) returns (ClusterRouterResponse) {}
+
+  // 클러스터 라우터 삭제
+  rpc DeleteClusterRouter(DeleteClusterRouterRequest) returns (DeleteClusterRouterResponse) {}
+
+  // 클러스터 네트워크 라우터 목록 조회
+  rpc GetClusterRouterList(ClusterRouterListRequest) returns (ClusterRouterListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/routers";};
+  }
+
+  // 클러스터 네트워크 라우터 조회
+  rpc GetClusterRouter(ClusterRouterRequest) returns (ClusterRouterResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/routers/{cluster_router_id}";};
+  }
+
+  // 클러스터 네트워크 라우터 조회(UUID)
+  //rpc GetClusterRouterByUUID(ClusterRouterByUUIDRequest) returns (ClusterRouterResponse) {}
+
+  // 클러스터 Routing Interface 존재유무 확인(IPAddress)
+  rpc CheckIsExistClusterRoutingInterface(CheckIsExistClusterRoutingInterfaceRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 볼륨타입 목록 조회
+  rpc GetClusterStorageList(ClusterStorageListRequest) returns (ClusterStorageListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/storages";};
+  }
+
+  // 클러스터 볼륨타입 조회
+  rpc GetClusterStorage(ClusterStorageRequest) returns (ClusterStorageResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/storages/{cluster_storage_id}";};
+  }
+
+  // 클러스터 볼륨타입 메타데이터 수정
+  rpc UpdateClusterStorageMetadata(UpdateClusterStorageMetadataRequest) returns (ClusterStorageMetadataResponse) {
+    option (google.api.http) = {patch: "/management/clusters/{cluster_id}/storages/{cluster_storage_id}"; body: "*";};
+  }
+
+  // 클러스터 볼륨 그룹 목록 조회
+  rpc GetClusterVolumeGroupList(GetClusterVolumeGroupListRequest) returns (GetClusterVolumeGroupListResponse) {}
+
+  // 클러스터 볼륨 그룹 조회 (UUID)
+  rpc GetClusterVolumeGroupByUUID(GetClusterVolumeGroupByUUIDRequest) returns (GetClusterVolumeGroupResponse) {}
+
+  // 클러스터 볼륨 그룹 생성
+  rpc CreateClusterVolumeGroup(CreateClusterVolumeGroupRequest) returns (CreateClusterVolumeGroupResponse) {}
+
+  // 클러스터 볼륨 그룹 삭제
+  rpc DeleteClusterVolumeGroup(DeleteClusterVolumeGroupRequest) returns (DeleteClusterVolumeGroupResponse) {}
+
+  // 클러스터 볼륨 그룹 수정
+  rpc UpdateClusterVolumeGroup(UpdateClusterVolumeGroupRequest) returns (UpdateClusterVolumeGroupResponse) {}
+
+  // 클러스터 볼륨 그룹 스냅샷 생성
+  rpc CreateClusterVolumeGroupSnapshot(CreateClusterVolumeGroupSnapshotRequest) returns (CreateClusterVolumeGroupSnapshotResponse) {}
+
+  // 클러스터 볼륨 그룹 스냅샷 목록 조회
+  rpc GetClusterVolumeGroupSnapshotList(GetClusterVolumeGroupSnapshotListRequest) returns(GetClusterVolumeGroupSnapshotListResponse) {}
+
+  // 클러스터 볼륨 그룹 스냅샷 삭제
+  rpc DeleteClusterVolumeGroupSnapshot(DeleteClusterVolumeGroupSnapshotRequest) returns (DeleteClusterVolumeGroupSnapshotResponse) {}
+
+  // 클러스터 볼륨 목록 조회
+  rpc GetClusterVolumeList(ClusterVolumeListRequest) returns (ClusterVolumeListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/volumes";};
+  }
+
+  // 클러스터 볼륨 조회
+  rpc GetClusterVolume(ClusterVolumeRequest) returns (ClusterVolumeResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/volumes/{cluster_volume_id}";};
+  }
+
+  // 클러스터 볼륨 조회(UUID)
+  //rpc GetClusterVolumeByUUID(ClusterVolumeByUUIDRequest) returns (ClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 생성
+  //rpc CreateClusterVolume(CreateClusterVolumeRequest) returns (CreateClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 import
+  rpc ImportClusterVolume(ImportClusterVolumeRequest) returns (ImportClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 copy
+  rpc CopyClusterVolume(CopyClusterVolumeRequest) returns (CopyClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 copy 삭제
+  rpc DeleteClusterVolumeCopy(DeleteClusterVolumeCopyRequest) returns (DeleteClusterVolumeCopyResponse) {}
+
+  // 클러스터 볼륨 삭제
+  //rpc DeleteClusterVolume(DeleteClusterVolumeRequest) returns (DeleteClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 unmanage
+  rpc UnmanageClusterVolume(UnmanageClusterVolumeRequest) returns (UnmanageClusterVolumeResponse) {}
+
+  // 클러스터 볼륨 스냅샷 목록 동기화
+  rpc SyncClusterVolumeSnapshotList(SyncClusterVolumeSnapshotListRequest) returns (SyncClusterVolumeSnapshotListResponse) {}
+
+  // 클러스터 볼륨 스냅샷 생성
+  //rpc CreateClusterVolumeSnapshot(CreateClusterVolumeSnapshotRequest) returns (CreateClusterVolumeSnapshotResponse) {}
+
+  // 클러스터 볼륨 스냅샷 삭제
+  //rpc DeleteClusterVolumeSnapshot(DeleteClusterVolumeSnapshotRequest) returns (DeleteClusterVolumeSnapshotResponse) {}
+
+  // 클러스터 인스턴스 목록 조회
+  rpc GetClusterInstanceList(ClusterInstanceListRequest) returns (ClusterInstanceListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/instances";};
+  }
+
+  // 클러스터 인스턴스 조회
+  rpc GetClusterInstance(ClusterInstanceRequest) returns (ClusterInstanceResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/instances/{cluster_instance_id}";};
+  }
+
+  // 클러스터 인스턴스 조회(UUID)
+  rpc GetClusterInstanceByUUID(ClusterInstanceByUUIDRequest) returns (ClusterInstanceResponse) {}
+
+  // 클러스터 인스턴스 수 조회
+  rpc GetClusterInstanceNumber(ClusterInstanceNumberRequest) returns (ClusterInstanceNumberResponse) {}
+
+  // 클러스터 인스턴스 존재유무 확인(UUID)
+  rpc CheckIsExistClusterInstance(CheckIsExistClusterInstanceRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 인스턴스 생성
+  rpc CreateClusterInstance(CreateClusterInstanceRequest) returns (CreateClusterInstanceResponse) {}
+
+  // 클러스터 인스턴스 삭제
+  rpc DeleteClusterInstance(DeleteClusterInstanceRequest) returns (DeleteClusterInstanceResponse) {}
+
+  // 클러스터 인스턴스 기동
+  //rpc StartClusterInstance(StartClusterInstanceRequest) returns (StartClusterInstanceResponse) {}
+
+  // 클러스터 인스턴스 중지
+  rpc StopClusterInstance(StopClusterInstanceRequest) returns (StopClusterInstanceResponse) {}
+
+  // 클러스터 인스턴스 Spec 목록 조회
+  //rpc GetClusterInstanceSpecList(ClusterInstanceSpecListRequest) returns (ClusterInstanceSpecListResponse) {
+  //  option (google.api.http) = {get: "/management/clusters/{cluster_id}/instance-specs";};
+  //}
+
+  // 클러스터 인스턴스 Spec 조회
+  //rpc GetClusterInstanceSpec(ClusterInstanceSpecRequest) returns (ClusterInstanceSpecResponse) {
+  //  option (google.api.http) = {get: "/management/clusters/{cluster_id}/instance-specs/{cluster_instance_spec_id}";};
+  //}
+
+  // 클러스터 인스턴스 Spec 조회(UUID)
+  rpc GetClusterInstanceSpecByUUID(ClusterInstanceSpecByUUIDRequest) returns (ClusterInstanceSpecResponse) {}
+
+  // 클러스터 인스턴스 Spec 존재유무 확인(Name)
+  rpc CheckIsExistClusterInstanceSpec(CheckIsExistByNameRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 인스턴스 Spec 생성
+  rpc CreateClusterInstanceSpec(CreateClusterInstanceSpecRequest) returns (CreateClusterInstanceSpecResponse) {}
+
+  // 클러스터 인스턴스 Spec 삭제
+  rpc DeleteClusterInstanceSpec(DeleteClusterInstanceSpecRequest) returns (DeleteClusterInstanceSpecResponse) {}
+
+  // 클러스터 KeyPair 조회
+  rpc GetClusterKeyPair(ClusterKeyPairRequest) returns (ClusterKeyPairResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/keypairs/{cluster_keypair_id}";};
+  }
+
+  // 클러스터 Keypair 존재유무 확인(Name)
+  rpc CheckIsExistClusterKeypair(CheckIsExistByNameRequest) returns (CheckIsExistResponse) {}
+
+  // 클러스터 Keypair 생성
+  rpc CreateClusterKeypair(CreateClusterKeypairRequest) returns (CreateClusterKeypairResponse) {}
+
+  // 클러스터 Keypair 삭제
+  rpc DeleteClusterKeypair(DeleteClusterKeypairRequest) returns (DeleteClusterKeypairResponse) {}
+
+  // 클러스터 Instance User Script 조회
+  rpc GetClusterInstanceUserScript(ClusterInstanceUserScriptRequest) returns (ClusterInstanceUserScriptResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/user-scripts/{cluster_instance_id}";};
+  }
+
+  // 클러스터 Instance User Script 수정
+  rpc UpdateClusterInstanceUserScript(UpdateClusterInstanceUserScriptRequest) returns (UpdateClusterInstanceUserScriptResponse) {
+    option (google.api.http) = {patch: "/management/clusters/{cluster_id}/user-scripts/{cluster_instance_id}"; body: "*";};
+  }
+
+  // 클러스터 보안 그룹 생성
+  rpc CreateClusterSecurityGroup(CreateClusterSecurityGroupRequest) returns (ClusterSecurityGroupResponse);
+
+  // 클러스터 보안 그룹 규칙 생성
+  rpc CreateClusterSecurityGroupRule(CreateClusterSecurityGroupRuleRequest) returns (ClusterSecurityGroupRuleResponse);
+
+  // 클러스터 보안 그룹 제거
+  rpc DeleteClusterSecurityGroup(DeleteClusterSecurityGroupRequest) returns (DeleteClusterSecurityGroupResponse);
+
+  // 클러스터 보안그룹 목록 조회
+  rpc GetClusterSecurityGroupList(ClusterSecurityGroupListRequest) returns (ClusterSecurityGroupListResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/security-groups";};
+  }
+
+  // 클러스터 보안그룹 조회
+  rpc GetClusterSecurityGroup(ClusterSecurityGroupRequest) returns (ClusterSecurityGroupResponse) {
+    option (google.api.http) = {get: "/management/clusters/{cluster_id}/security-groups/{cluster_security_group_id}";};
+  }
+
+  // 클러스터 보안 그룹 조회(UUID)
+  //rpc GetClusterSecurityGroupByUUID(ClusterSecurityGroupByUUIDRequest) returns (ClusterSecurityGroupResponse) {}
+
+  // 클러스터 보안 그룹 존재유무 확인(Name)
+  rpc CheckIsExistClusterSecurityGroup(CheckIsExistByNameRequest) returns (CheckIsExistResponse) {}
+}
+
+message Empty {
+}
+
+message Message {
+  string code = 1;
+  string contents = 2;
+}
+
+message Pagination {
+  google.protobuf.UInt64Value page = 1;
+  google.protobuf.UInt64Value total_page = 2;
+  google.protobuf.UInt64Value total_items = 3;
+}
+
+message PublicKey {
+  string key = 1;
+  Message message = 2;
+}
+
+message ClusterConnectionResponse {
+  Message message = 1;
+}
+
+message UpdateCredentialRequest {
+  uint64 cluster_id = 1;
+  string old_credential = 2;
+  string new_credential = 3;
+}
+
+message UpdateCredentialResponse {
+  string message = 1;
+}
+
+message ClusterConnectionInfo {
+  string type_code = 1;
+  string api_server_url = 2;
+  string credential = 3;
+  string tenant_id = 4;
+}
+
+message Config {
+  int64 timestamp_interval = 1;
+  int64 reserved_sync_interval = 2;
+}
+
+message GetCenterConfigRequest {
+  uint64 cluster_id = 1;
+}
+
+message GetCenterConfigResponse {
+  Config config = 1;
+  Message message = 2;
+}
+
+message UpdateCenterConfigRequest {
+  uint64 cluster_id = 1;
+  Config config = 2;
+}
+
+message UpdateCenterConfigResponse {
+  Message message = 1;
+}
+
+message StorageStatus {
+  string id = 1;
+  string binary = 2;
+  string backend_name = 3;
+  string host = 4;
+  string zone = 5;
+  string status = 6;
+  string last_updated = 7;
+  bool exception = 8;
+  bool deleted = 9;
+}
+
+message NetworkStatus {
+  string id = 1;
+  string type = 2;
+  string binary = 3;
+  string host = 4;
+  string status = 5;
+  string last_updated = 6;
+  bool exception = 7;
+  bool deleted = 8;
+}
+
+message ComputeStatus {
+  string id = 1;
+  string binary = 2;
+  string host = 3;
+  string zone = 4;
+  string status = 5;
+  string last_updated = 6;
+  bool exception = 7;
+  bool deleted = 8;
+}
+
+message Completion {
+  string resource = 1;
+  string progress_status = 2;
+}
+
+message CheckClusterRequest {
+  uint64 cluster_id = 1;
+}
+
+message CheckClusterResponse {
+  repeated ComputeStatus computes = 1;
+  repeated StorageStatus storages = 2;
+  repeated NetworkStatus networks = 3;
+  string status = 4;
+  string updated_at = 5;
+  string compute_error = 6;
+  string storage_error = 7;
+  string network_error = 8;
+  Message message = 9;
+}
+
+message SyncClusterRequest {
+  uint64 cluster_id = 1;
+}
+
+message SyncClusterResponse {
+  Message message = 1;
+}
+
+message GetClusterSyncStatusResponse {
+  uint64 id = 1;
+  string status = 2;
+  int64 progress = 3;
+  repeated Completion completion = 4;
+  repeated Message reasons = 5;
+}
+
+message SyncExceptionResponse {
+  Message message = 1;
+}
+
+message SyncExceptionRequest {
+  uint64 cluster_id = 1;
+  repeated ComputeStatus computes = 2;
+  repeated StorageStatus storages = 3;
+  repeated NetworkStatus networks = 4;
+}
+
+message Group {
+  uint64 id = 1;
+  string name = 3;
+  string remarks = 4;
+  bool deleted_flag = 5;
+}
+
+message ClusterPermission {
+  Group group = 1;
+  string mode_code = 2;
+}
+
+message Cluster {
+  uint64 id = 1;
+  Group owner_group = 2;
+  repeated ClusterPermission permissions = 3;
+  string name = 4;
+  string state_code = 5;
+  string type_code = 6;
+  string api_server_url = 7;
+  string credential = 8;
+  string remarks = 9;
+  int64 created_at = 10;
+  int64 updated_at = 11;
+  int64 synchronized_at = 12;
+}
+
+message ClusterListResponse {
+  repeated Cluster clusters = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterListRequest {
+  string type_code = 1;
+  string name = 2;
+  uint64 owner_group_id = 3;
+  google.protobuf.UInt64Value limit = 5;
+  google.protobuf.UInt64Value offset = 6;
+  bool sync = 7;
+}
+
+message ClusterResponse {
+  Cluster cluster = 1;
+  Message message = 2;
+}
+
+message ClusterRequest {
+  uint64 cluster_id = 1;
+  bool sync = 2;
+}
+
+message AddClusterRequest {
+  Cluster cluster = 1;
+}
+
+message UpdateClusterRequest {
+  uint64 cluster_id = 1;
+  Cluster cluster = 2;
+}
+
+message DeleteClusterResponse {
+  Message message = 1;
+}
+
+message DeleteClusterRequest {
+  uint64 cluster_id = 1;
+}
+
+message ClusterHypervisor {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  ClusterAvailabilityZone availability_zone = 3;
+  string uuid = 4;
+  string type_code = 5;
+  string hostname = 6;
+  string ip_address = 7;
+  uint32 vcpu_total_cnt = 8;
+  uint32 vcpu_used_cnt = 9;
+  uint64 mem_total_bytes = 10;
+  uint64 mem_used_bytes = 11;
+  uint64 disk_total_bytes = 12;
+  uint64 disk_used_bytes = 13;
+  uint32 ssh_port = 14;
+  string ssh_account = 15;
+  string ssh_password = 16;
+  uint32 agent_port = 17;
+  string agent_version = 18;
+  int64 agent_installed_at = 19;
+  int64 agent_last_upgraded_at = 20;
+  string state = 21;
+  string status = 22;
+}
+
+message ClusterHypervisorListResponse {
+  repeated ClusterHypervisor hypervisors = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterHypervisorListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_availability_zone_id = 2;
+  string hostname = 3;
+  string ip_address = 4;
+  google.protobuf.UInt64Value limit = 5;
+  google.protobuf.UInt64Value offset = 6;
+  bool sync = 7;
+}
+
+message ClusterHypervisorResponse {
+  ClusterHypervisor hypervisor = 1;
+  Message message = 2;
+}
+
+message ClusterHypervisorRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_hypervisor_id = 2;
+  bool sync = 3;
+}
+
+message UpdateClusterHypervisorRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_hypervisor_id = 2;
+  ClusterHypervisor hypervisor = 3;
+}
+
+message ClusterAvailabilityZone {
+  uint64 id = 1;
+  string name = 2;
+  bool available = 3;
+  Cluster cluster = 4;
+  repeated ClusterHypervisor hypervisors = 5;
+}
+
+message ClusterAvailabilityZoneListResponse {
+  repeated ClusterAvailabilityZone availability_zones = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterAvailabilityZoneListRequest {
+  uint64 cluster_id = 1;
+  google.protobuf.UInt64Value limit = 2;
+  google.protobuf.UInt64Value offset = 3;
+  bool sync = 4;
+}
+
+message ClusterAvailabilityZoneResponse {
+  ClusterAvailabilityZone availability_zone = 1;
+  Message message = 2;
+}
+
+message ClusterAvailabilityZoneRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_availability_zone_id = 2;
+  bool sync = 3;
+}
+
+message ClusterQuota {
+  string key = 1;
+  int64 value = 2;
+}
+
+message ClusterTenant {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  string uuid = 3;
+  string name = 4;
+  bool enabled = 5;
+  string description = 6;
+  repeated ClusterQuota quotas = 7;
+}
+
+message ClusterTenantListResponse {
+  repeated ClusterTenant tenants = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message DeleteClusterTenantRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+}
+
+message DeleteClusterTenantResponse {
+  Message message = 1;
+}
+
+message ClusterTenantListRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  google.protobuf.UInt64Value limit = 3;
+  google.protobuf.UInt64Value offset = 4;
+  bool sync = 5;
+}
+
+message ClusterTenantResponse {
+  ClusterTenant tenant = 1;
+  Message message = 2;
+}
+
+message ClusterTenantRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  bool sync = 3;
+}
+
+message ClusterTenantByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message CreateClusterTenantRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+}
+
+message CheckIsExistByNameRequest {
+  uint64 cluster_id = 1;
+  string name = 2;
+}
+
+message CheckIsExistResponse {
+  bool is_exist = 1;
+  Message message = 2;
+}
+
+message DeleteClusterSecurityGroupRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterSecurityGroup security_group = 3;
+}
+
+message DeleteClusterSecurityGroupResponse {
+  Message message = 1;
+}
+
+message ClusterSubnetDHCPPool {
+  uint64 id = 1;
+  string start_ip_address = 2;
+  string end_ip_address = 3;
+}
+
+message ClusterSubnetNameserver {
+  uint64 id = 1;
+  string nameserver = 2;
+}
+
+message ClusterSubnet {
+  uint64 id = 1;
+  string uuid = 2;
+  string name = 3;
+  string description = 4;
+  string network_cidr = 5;
+  bool dhcp_enabled = 6;
+  repeated ClusterSubnetDHCPPool dhcp_pools = 7;
+  bool gateway_enabled = 8;
+  string gateway_ip_address = 9;
+  string ipv6_address_mode_code = 10;
+  string ipv6_ra_mode_code = 11;
+  repeated ClusterSubnetNameserver nameservers = 12;
+}
+
+message ClusterNetwork {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  ClusterTenant tenant = 3;
+  string type_code = 4;
+  string uuid = 5;
+  string name = 6;
+  string description = 7;
+  bool external_flag = 8;
+  string status = 9;
+  string state = 10;
+  repeated ClusterSubnet subnets = 11;
+  repeated ClusterFloatingIP floating_ips = 12;
+}
+
+message ClusterNetworkListResponse {
+  repeated ClusterNetwork networks = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterNetworkListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  string uuid = 3;
+  bool external_only = 4;
+  google.protobuf.UInt64Value limit = 5;
+  google.protobuf.UInt64Value offset = 6;
+  bool sync = 7;
+}
+
+message ClusterNetworkResponse {
+  ClusterNetwork network = 1;
+  Message message = 2;
+}
+
+message DeleteClusterNetworkResponse {
+  Message message = 1;
+}
+
+message DeleteClusterNetworkRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterNetwork network = 3;
+}
+
+message CreateClusterNetworkRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterNetwork network = 3;
+}
+
+message ClusterNetworkRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_network_id = 2;
+  bool sync = 3;
+}
+
+message ClusterNetworkByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message ClusterSubnetResponse {
+  ClusterSubnet subnet = 1;
+  Message message = 2;
+}
+
+message CreateClusterSubnetRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterNetwork network = 3;
+  ClusterSubnet subnet = 4;
+}
+
+message DeleteClusterSubnetRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterNetwork network = 3;
+  ClusterSubnet subnet = 4;
+}
+
+message DeleteClusterSubnetResponse {
+  Message message = 1;
+}
+
+message ClusterSubnetRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_subnet_id = 2;
+  bool sync = 3;
+}
+
+message CreateClusterFloatingIPRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterNetwork network = 3;
+  ClusterFloatingIP floating_ip = 4;
+}
+
+message ClusterFloatingIPResponse {
+  ClusterFloatingIP floating_ip = 1;
+  Message message = 2;
+}
+
+message ClusterFloatingIPRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_floating_ip_id = 2;
+  bool sync = 3;
+}
+
+message CheckIsExistClusterFloatingIPRequest {
+  uint64 cluster_id = 1;
+  string cluster_floating_ip_ip_address = 2;
+}
+
+message DeleteClusterFloatingIPRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterFloatingIP floating_ip = 3;
+}
+
+message DeleteClusterFloatingIPResponse {
+  Message message = 1;
+}
+
+message ClusterNetworkRoutingInterface {
+  ClusterNetwork network = 1;
+  ClusterSubnet subnet = 2;
+  string ip_address = 3;
+}
+
+message ClusterRouterExtraRoute {
+  uint64 id = 1;
+  string destination = 2;
+  string nexthop = 3;
+}
+
+message CheckIsExistClusterRoutingInterfaceRequest {
+  uint64 cluster_id = 1;
+  string cluster_routing_interface_ip_address = 2;
+}
+
+message ClusterRouter {
+  uint64 id = 1;
+  ClusterTenant tenant = 2;
+  string uuid = 3;
+  string name = 4;
+  string description = 5;
+  repeated ClusterNetworkRoutingInterface internal_routing_interfaces = 6;
+  repeated ClusterNetworkRoutingInterface external_routing_interfaces = 7;
+  repeated ClusterRouterExtraRoute extra_routes = 8;
+  string status = 9;
+  string state = 10;
+}
+
+message CreateClusterRouterRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterRouter router = 3;
+}
+
+message DeleteClusterRouterRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterRouter router = 3;
+}
+
+message DeleteClusterRouterResponse {
+  Message message = 1;
+}
+
+message ClusterRouterListResponse {
+  repeated ClusterRouter routers = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterRouterListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  uint64 cluster_network_id = 3;
+  string uuid = 4;
+  google.protobuf.UInt64Value limit = 5;
+  google.protobuf.UInt64Value offset = 6;
+  bool sync = 7;
+}
+
+message ClusterRouterResponse {
+  ClusterRouter router = 1;
+  Message message = 2;
+}
+
+message ClusterRouterRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_router_id = 2;
+  bool sync = 3;
+}
+
+message ClusterRouterByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message ClusterStorage {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  string uuid = 3;
+  string name = 4;
+  string type_code = 5;
+  uint64 capacity_bytes = 6;
+  uint64 used_bytes = 7;
+  string description = 8;
+  string status = 9;
+}
+
+message ClusterStorageMetadataResponse {
+  map<string, string> metadata = 1;
+  Message message = 2;
+}
+
+message UpdateClusterStorageMetadataRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_storage_id = 2;
+  map<string, string> metadata = 3;
+}
+
+message ClusterStorageResponse {
+  ClusterStorage storage = 1;
+  Message message = 2;
+}
+
+message ClusterStorageRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_storage_id = 2;
+  bool sync = 3;
+}
+
+message ClusterStorageListResponse {
+  repeated ClusterStorage storages = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterStorageListRequest {
+  uint64 cluster_id = 1;
+  string type_code = 2;
+  string name = 3;
+  google.protobuf.UInt64Value limit = 4;
+  google.protobuf.UInt64Value offset = 5;
+  bool sync = 6;
+}
+
+message ClusterVolumeGroup {
+  string uuid = 1;
+  string name = 2;
+  string description = 3;
+  ClusterTenant tenant = 4;
+  repeated ClusterStorage storages = 5;
+  repeated ClusterVolume volumes = 6;
+}
+
+message ClusterVolumeGroupSnapshot {
+  string uuid = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message GetClusterVolumeGroupListRequest {
+  uint64 cluster_id = 1;
+}
+
+message GetClusterVolumeGroupListResponse {
+  repeated ClusterVolumeGroup volume_groups = 1;
+}
+
+message GetClusterVolumeGroupByUUIDRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  string cluster_volume_group_uuid = 3;
+}
+
+message GetClusterVolumeGroupResponse {
+  ClusterVolumeGroup volume_group = 1;
+}
+
+message CreateClusterVolumeGroupRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeGroup volume_group = 3;
+}
+
+message CreateClusterVolumeGroupResponse {
+  ClusterVolumeGroup volume_group = 1;
+  Message message = 2;
+}
+
+message DeleteClusterVolumeGroupRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeGroup volume_group = 3;
+}
+
+message DeleteClusterVolumeGroupResponse {
+  Message message = 1;
+}
+
+message UpdateClusterVolumeGroupRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeGroup volume_group = 3;
+  repeated ClusterVolume add_volumes = 4;
+  repeated ClusterVolume delete_volumes = 5;
+}
+
+message UpdateClusterVolumeGroupResponse {
+  Message message = 1;
+}
+
+message CreateClusterVolumeGroupSnapshotRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeGroup volume_group = 3;
+  ClusterVolumeGroupSnapshot volume_group_snapshot = 4;
+}
+
+message CreateClusterVolumeGroupSnapshotResponse {
+  ClusterVolumeGroupSnapshot volume_group_snapshot = 1;
+  Message message = 2;
+}
+
+message DeleteClusterVolumeGroupSnapshotRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeGroup volume_group = 3;
+  ClusterVolumeGroupSnapshot volume_group_snapshot = 4;
+}
+
+message DeleteClusterVolumeGroupSnapshotResponse {
+  Message message = 1;
+}
+
+message GetClusterVolumeGroupSnapshotListRequest {
+  ClusterConnectionInfo conn = 1;
+}
+
+message GetClusterVolumeGroupSnapshotListResult {
+  ClusterVolumeGroup volume_group = 1;
+  ClusterVolumeGroupSnapshot volume_group_snapshot = 2;
+}
+
+message GetClusterVolumeGroupSnapshotListResponse {
+  repeated GetClusterVolumeGroupSnapshotListResult volume_group_snapshots = 1;
+  Message message = 2;
+}
+
+message ClusterVolumeSnapshot {
+  uint64 id = 1;
+  string uuid = 2;
+  string cluster_volume_group_snapshot_uuid = 3;
+  string name = 4;
+  string description = 5;
+  uint64 size_bytes = 6;
+  string status = 7;
+  uint64 created_at = 8;
+}
+
+message ClusterVolume {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  ClusterTenant tenant = 3;
+  ClusterStorage storage = 4;
+  repeated ClusterVolumeSnapshot snapshots = 5;
+  string uuid = 6;
+  string name = 7;
+  string description = 8;
+  uint64 size_bytes = 9;
+  bool multiattach = 10;
+  bool bootable = 11;
+  bool readonly = 12;
+  string status = 13;
+}
+
+message ClusterVolumeResponse {
+  ClusterVolume volume = 1;
+  Message message = 2;
+}
+
+message ClusterVolumeRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_volume_id = 2;
+  bool sync = 3;
+}
+
+message ClusterVolumeByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message ClusterVolumeListResponse {
+  repeated ClusterVolume volumes = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterVolumeListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  uint64 cluster_storage_id = 3;
+  uint64 cluster_instance_id = 4;
+  string uuid = 5;
+  string name = 6;
+  google.protobuf.UInt64Value limit = 7;
+  google.protobuf.UInt64Value offset = 8;
+  bool sync = 9;
+}
+
+message CreateClusterVolumeRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterStorage storage = 3;
+  ClusterVolume volume = 4;
+}
+
+message CreateClusterVolumeResponse {
+  ClusterVolume volume = 1;
+  Message message = 2;
+}
+
+message ImportClusterVolumeRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterStorage source_storage = 3;
+  ClusterStorage target_storage = 4;
+  map<string, string> target_metadata = 5;
+  ClusterVolume volume = 6;
+  repeated ClusterVolumeSnapshot snapshots = 7;
+}
+
+message ImportClusterVolumeResponse {
+  ClusterStorage source_storage = 1;
+  ClusterStorage target_storage = 2;
+  VolumePair volume_pair = 3;
+  repeated SnapshotPair snapshot_pairs = 4;
+  Message message = 5;
+}
+
+message CopyClusterVolumeRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterStorage source_storage = 3;
+  ClusterStorage target_storage = 4;
+  map<string, string> target_metadata = 5;
+  ClusterVolume volume = 6;
+  repeated ClusterVolumeSnapshot snapshots = 7;
+}
+
+message CopyClusterVolumeResponse {
+  ClusterStorage source_storage = 1;
+  ClusterStorage target_storage = 2;
+  ClusterVolume volume = 3;
+  repeated ClusterVolumeSnapshot snapshots = 4;
+  Message message = 5;
+}
+
+message DeleteClusterVolumeCopyRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterStorage source_storage = 3;
+  ClusterStorage target_storage = 4;
+  map<string, string> target_metadata = 5;
+  ClusterVolume volume = 6;
+  uint64 volume_id = 7;
+  repeated ClusterVolumeSnapshot snapshots = 8;
+}
+
+message DeleteClusterVolumeCopyResponse {
+  Message message = 1;
+}
+
+message CreateClusterVolumeSnapshotRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolume volume = 3;
+  ClusterVolumeSnapshot snapshot = 4;
+}
+
+message CreateClusterVolumeSnapshotResponse {
+  ClusterVolumeSnapshot snapshot = 1;
+  Message message = 2;
+}
+
+message DeleteClusterVolumeRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolume volume = 3;
+}
+
+message DeleteClusterVolumeResponse {
+  Message message = 1;
+}
+
+message SyncClusterVolumeSnapshotListRequest {
+  Cluster cluster = 1;
+}
+
+message SyncClusterVolumeSnapshotListResponse {
+  Message message = 1;
+}
+
+message VolumePair {
+  ClusterVolume source = 1;
+  ClusterVolume target = 2;
+  string SourceFile = 3;
+  string TargetFile = 4;
+}
+message SnapshotPair {
+  ClusterVolumeSnapshot source = 1;
+  ClusterVolumeSnapshot target = 2;
+  string SourceFile = 3;
+  string TargetFile = 4;
+}
+
+message UnmanageClusterVolumeRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterStorage source_storage = 3;
+  ClusterStorage target_storage = 4;
+  map<string, string> target_metadata = 5;
+  VolumePair volume_pair = 6;
+  uint64 volume_id = 7;
+  repeated SnapshotPair snapshot_pairs = 8;
+}
+
+message UnmanageClusterVolumeResponse {
+  Message message = 1;
+}
+
+message DeleteClusterVolumeSnapshotRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterVolumeSnapshot snapshot = 3;
+}
+
+message DeleteClusterVolumeSnapshotResponse {
+  Message message = 1;
+}
+
+message ClusterFloatingIP {
+  uint64 id = 1;
+  string uuid = 2;
+  string description = 3;
+  string ip_address = 4;
+  string status = 5;
+  ClusterTenant tenant = 6;
+  ClusterNetwork network = 7;
+}
+
+message ClusterKeypair {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  string name = 3;
+  string fingerprint = 4;
+  string public_key = 5;
+  string type_code = 6;
+}
+
+message ClusterInstanceExtraSpec {
+  string key = 1;
+  string value = 2;
+}
+
+message ClusterInstanceSpec {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  string uuid = 3;
+  string name = 4;
+  string description = 5;
+  uint32 vcpu_total_cnt = 6;
+  uint64 mem_total_bytes = 7;
+  uint64 disk_total_bytes = 8;
+  uint64 swap_total_bytes = 9;
+  uint64 ephemeral_total_bytes = 10;
+  repeated ClusterInstanceExtraSpec extra_specs = 11;
+}
+
+message ClusterSecurityGroupRule {
+  uint64 id = 1;
+  string uuid = 2;
+  string direction = 3;
+  string description = 4;
+  string network_cidr = 5;
+  uint32 port_range_max = 6;
+  uint32 port_range_min = 7;
+  string protocol = 8;
+  uint32 ether_type = 9;
+  ClusterSecurityGroup remote_security_group = 10;
+}
+
+message ClusterSecurityGroup {
+  uint64 id = 1;
+  Cluster cluster = 2;
+  ClusterTenant tenant = 3;
+  string uuid = 4;
+  string name = 5;
+  string description = 6;
+  repeated ClusterSecurityGroupRule rules = 7;
+}
+
+message ClusterInstanceNetwork {
+  uint64 id = 1;
+  ClusterNetwork network = 2;
+  ClusterSubnet subnet = 3;
+  ClusterFloatingIP floating_ip = 4;
+  bool dhcp_flag = 5;
+  string ip_address = 6;
+}
+
+message ClusterInstanceVolume {
+  ClusterStorage storage = 1;
+  ClusterVolume volume = 2;
+  string device_path = 3;
+  int64 boot_index = 4;
+}
+message ClusterInstance {
+  uint64 id = 1;
+  string uuid = 2;
+  string name = 3;
+  string description = 4;
+  string status = 5;
+  string state = 6;
+  Cluster cluster = 7;
+  ClusterTenant tenant = 8;
+  ClusterAvailabilityZone availability_zone = 9;
+  ClusterHypervisor hypervisor = 10;
+  ClusterKeypair keypair = 11;
+  ClusterInstanceSpec spec = 12;
+  repeated ClusterInstanceNetwork networks = 13;
+  repeated ClusterRouter routers = 14;
+  repeated ClusterSecurityGroup security_groups = 15;
+  repeated ClusterInstanceVolume volumes = 16;
+}
+
+message ClusterInstanceListResponse {
+  repeated ClusterInstance instances = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterInstanceListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  uint64 cluster_availability_zone_id = 3;
+  uint64 cluster_hypervisor_id = 4;
+  uint64 cluster_volume_id = 5;
+  string uuid = 6;
+  string name = 7;
+  google.protobuf.UInt64Value limit = 8;
+  google.protobuf.UInt64Value offset = 9;
+  bool sync = 10;
+}
+
+message ClusterInstanceResponse {
+  ClusterInstance instance = 1;
+  Message message = 2;
+}
+
+message ClusterInstanceRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_instance_id = 2;
+  bool sync = 3;
+}
+
+message ClusterInstanceByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message ClusterInstanceNumber {
+  uint64 total = 1;
+}
+
+message ClusterInstanceNumberResponse {
+  ClusterInstanceNumber instance_number = 1;
+  Message message = 2;
+}
+
+message ClusterInstanceNumberRequest {
+  uint64 cluster_id = 1;
+}
+
+message CheckIsExistClusterInstanceRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+}
+
+message CreateClusterInstanceRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterAvailabilityZone availability_zone = 3;
+  ClusterHypervisor hypervisor = 4;
+  ClusterInstanceSpec spec = 5;
+  ClusterKeypair keypair = 6;
+  ClusterInstance instance = 7;
+  repeated ClusterInstanceNetwork networks = 8;
+  repeated ClusterSecurityGroup security_groups = 9;
+  repeated ClusterInstanceVolume volumes = 10;
+}
+
+message CreateClusterInstanceResponse {
+  ClusterInstance instance = 1;
+  Message message = 2;
+}
+
+message DeleteClusterInstanceRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterInstance instance = 3;
+}
+
+message DeleteClusterInstanceResponse {
+  Message message = 1;
+}
+
+message ClusterInstanceSpecListRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  string name = 3;
+  google.protobuf.UInt64Value limit = 4;
+  google.protobuf.UInt64Value offset = 5;
+  bool sync = 6;
+}
+
+message ClusterInstanceSpecListResponse {
+  repeated ClusterInstanceSpec specs = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterInstanceSpecRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_instance_spec_id = 2;
+  bool sync = 3;
+}
+
+message ClusterInstanceSpecByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
+
+message ClusterInstanceSpecResponse {
+  ClusterInstanceSpec spec = 1;
+  Message message = 2;
+}
+
+message StartClusterInstanceRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterInstance instance = 3;
+}
+
+message StartClusterInstanceResponse {
+  Message message = 1;
+}
+
+message StopClusterInstanceRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterInstance instance = 3;
+}
+
+message StopClusterInstanceResponse {
+  Message message = 1;
+}
+
+message CreateClusterInstanceSpecRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterInstanceSpec spec = 2;
+  repeated ClusterInstanceExtraSpec extra_specs = 3;
+}
+
+message CreateClusterInstanceSpecResponse {
+  ClusterInstanceSpec spec = 1;
+  Message message = 2;
+}
+
+message DeleteClusterInstanceSpecRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterInstanceSpec spec = 2;
+}
+
+message DeleteClusterInstanceSpecResponse {
+  Message message = 1;
+}
+
+message ClusterKeyPairResponse {
+  ClusterKeypair keypair = 1;
+  Message message = 2;
+}
+
+message ClusterKeyPairRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_keypair_id = 2;
+  bool sync = 3;
+}
+
+message CreateClusterKeypairRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterKeypair keypair = 2;
+}
+
+message CreateClusterKeypairResponse {
+  ClusterKeypair keypair = 1;
+  Message message = 2;
+}
+
+message DeleteClusterKeypairRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterKeypair keypair = 2;
+}
+
+message DeleteClusterKeypairResponse {
+  Message message = 1;
+}
+
+message ClusterInstanceUserScriptRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_instance_id = 2;
+}
+
+message ClusterInstanceUserScriptResponse {
+  string user_data = 1;
+  Message message = 2;
+}
+
+message UpdateClusterInstanceUserScriptRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_instance_id = 2;
+  string user_data = 3;
+}
+
+message UpdateClusterInstanceUserScriptResponse {
+  Message message = 1;
+}
+
+message ClusterSecurityGroupListResponse {
+  repeated ClusterSecurityGroup security_groups = 1;
+  Pagination pagination = 2;
+  Message message = 3;
+}
+
+message ClusterSecurityGroupListRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_tenant_id = 2;
+  uint64 cluster_instance_id = 3;
+  string uuid = 4;
+  google.protobuf.UInt64Value limit = 5;
+  google.protobuf.UInt64Value offset = 6;
+  bool sync = 7;
+}
+
+message ClusterSecurityGroupResponse {
+  ClusterSecurityGroup security_group = 1;
+  Message message = 2;
+}
+
+message CreateClusterSecurityGroupRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterSecurityGroup security_group = 3;
+}
+
+message ClusterSecurityGroupRuleResponse {
+  ClusterSecurityGroupRule security_group_rule = 1;
+  Message message = 2;
+}
+
+message CreateClusterSecurityGroupRuleRequest {
+  ClusterConnectionInfo conn = 1;
+  ClusterTenant tenant = 2;
+  ClusterSecurityGroup security_group = 3;
+  ClusterSecurityGroupRule security_group_rule = 4;
+}
+
+message ClusterSecurityGroupRequest {
+  uint64 cluster_id = 1;
+  uint64 cluster_security_group_id = 2;
+  bool sync = 3;
+}
+
+message ClusterSecurityGroupByUUIDRequest {
+  uint64 cluster_id = 1;
+  string uuid = 2;
+  bool sync = 3;
+}
