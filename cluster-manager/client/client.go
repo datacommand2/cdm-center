@@ -243,7 +243,7 @@ func DecryptCredentialPassword(password string) (string, error) {
 		return "", errors.Unknown(err)
 	}
 
-	plainText, err := decryptAESCBC(cipherText, []byte(Key), []byte(Key[8:24]))
+	plainText, err := decryptAESCBC(cipherText, []byte(Key), []byte(Key))
 	if err != nil {
 		return "", errors.Unknown(err)
 	}
