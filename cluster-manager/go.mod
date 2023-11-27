@@ -4,8 +4,8 @@ go 1.14
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
-	github.com/datacommand2/cdm-cloud/common v0.0.0-20231116073359-755996e851e1
-	github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231116073359-755996e851e1
+	github.com/datacommand2/cdm-cloud/common v0.0.0-20231124062432-069e9eb1c852
+	github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231124065504-a141af3cd63a
 	github.com/golang/protobuf v1.5.3
 	github.com/google/uuid v1.4.0
 	github.com/jinzhu/copier v0.4.0

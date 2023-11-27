@@ -6,6 +6,7 @@ import (
 	"github.com/datacommand2/cdm-center/cluster-manager/constant"
 	"github.com/datacommand2/cdm-center/cluster-manager/database/model"
 	"github.com/datacommand2/cdm-center/cluster-manager/internal"
+	cms "github.com/datacommand2/cdm-center/cluster-manager/proto"
 	"github.com/datacommand2/cdm-center/cluster-manager/queue"
 	"github.com/datacommand2/cdm-cloud/common/database"
 	commonModel "github.com/datacommand2/cdm-cloud/common/database/model"
@@ -14,14 +15,12 @@ import (
 	"github.com/datacommand2/cdm-cloud/common/metadata"
 	drConstant "github.com/datacommand2/cdm-disaster-recovery/common/constant"
 	"github.com/datacommand2/cdm-disaster-recovery/common/migrator"
-	drms "github.com/datacommand2/cdm-disaster-recovery/services/manager/proto"
-
-	"github.com/golang/protobuf/ptypes/wrappers"
-	"github.com/jinzhu/gorm"
-	"github.com/micro/go-micro/v2/client/grpc"
+	//drms "github.com/datacommand2/cdm-disaster-recovery/services/manager/proto"
 
 	"context"
 	"fmt"
+	"github.com/golang/protobuf/ptypes/wrappers"
+	"github.com/jinzhu/gorm"
 	"strings"
 	"time"
 
@@ -923,12 +922,12 @@ func Delete(ctx context.Context, req *cms.DeleteClusterRequest) error {
 		return errors.UnauthorizedRequest(ctx)
 	}
 
-	cli := drms.NewDisasterRecoveryManagerService(drConstant.ServiceManagerName, grpc.NewClient())
-	_, err = cli.CheckDeletableCluster(ctx, &drms.CheckDeletableClusterRequest{ClusterId: c.ID})
-	if err != nil {
-		logger.Errorf("[Cluster-Delete] Errors occurred during checking deletable status of the cluster(%d). Cause:%+v", req.ClusterId, err)
-		return errors.IPCFailed(err)
-	}
+	//cli := drms.NewDisasterRecoveryManagerService(drConstant.ServiceManagerName, grpc.NewClient())
+	//_, err = cli.CheckDeletableCluster(ctx, &drms.CheckDeletableClusterRequest{ClusterId: c.ID})
+	//if err != nil {
+	//	logger.Errorf("[Cluster-Delete] Errors occurred during checking deletable status of the cluster(%d). Cause:%+v", req.ClusterId, err)
+	//	return errors.IPCFailed(err)
+	//}
 
 	if err = database.GormTransaction(func(db *gorm.DB) error {
 		if err = deleteRelation(db, req.ClusterId); err != nil {
