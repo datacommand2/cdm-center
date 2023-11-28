@@ -1,0 +1,190 @@
+Resource:
+  get:
+    summary: 클러스터 인스턴스 Spec 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01524
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: '#/components/parameters/Name'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/InstanceSpecs'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 인스턴스 Spec 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01522
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/InstanceSpecID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/InstanceSpec'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    InstanceSpecID:
+      in: path
+      name: cluster_instance_spec_id
+      description: 클러스터 인스턴스 Spec ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 인스턴스 Spec ID
+      schema:
+        type: string
+
+    Name:
+      in: query
+      name: name
+      description: 인스턴스 Spec 이름
+      schema:
+        type: string
+
+  responses:
+    InstanceSpecs:
+      description: 클러스터 인스턴스 Spec 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              specs:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterInstanceSpec'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            specs: [
+              {
+                id: 1, uuid: "1", name: "small server spec #1", description: "flavor description",
+                vcpu_total_cnt: 4, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                swap_total_bytes: 4295000, ephemeral_total_bytes: 4295000,
+                extra_specs: [ ],
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              },
+              {
+                id: 2, uuid: "2", name: "small server spec #2", description: "flavor description",
+                vcpu_total_cnt: 8, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                swap_total_bytes: 4295000, ephemeral_total_bytes: 4295000,
+                extra_specs: [ ],
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              },
+              {
+                id: 3, uuid: "3", name: "small server spec #3", description: "flavor description",
+                vcpu_total_cnt: 16, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                swap_total_bytes: 4295000, ephemeral_total_bytes: 4295000,
+                extra_specs: [ ],
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    InstanceSpec:
+      description: 클러스터 인스턴스 Spec 의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              spec:
+                $ref: 'schema.yaml#/ClusterInstanceSpec'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            spec: {
+              id: 1, uuid: "1", name: "small server spec #1", description: "flavor description",
+              vcpu_total_cnt: 4, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+              swap_total_bytes: 4295000, ephemeral_total_bytes: 4295000,
+              extra_specs: [],
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              }
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

@@ -1,0 +1,357 @@
+Resource:
+  get:
+    summary: 클러스터 네트워크 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01411
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: '#/components/parameters/ExternalFlag'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Networks'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 네트워크 조회
+    description: cluster_network_id 는 private network 의 id 이다. 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01421
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/NetworkID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Network'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Subnet:
+  get:
+    summary: 클러스터 서브넷 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01422
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/SubnetID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Subnet'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+FloatingIP:
+  get:
+    summary: 클러스터 FloatingIP 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01423
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/FloatingIPID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/FloatingIP'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    NetworkID:
+      in: path
+      name: cluster_network_id
+      description: 클러스터 네트워크 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    SubnetID:
+      in: path
+      name: cluster_subnet_id
+      description: 클러스터 서브넷 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    FloatingIPID:
+      in: path
+      name: cluster_floating_ip_id
+      description: 클러스터 FloatingIP ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: query
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 네트워크 ID
+      schema:
+        type: string
+
+    ExternalFlag:
+      in: query
+      name: external_only
+      description: 외부 네트워크만 조회
+      schema:
+        type: boolean
+
+  responses:
+    Networks:
+      description: 클러스터 네트워크 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              networks:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterNetwork'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            networks: [
+              {
+                id: 1, external_flag: true, type_code: "openstack.network.type.flat",
+                uuid: "6ea9b9cf-50b1-43de-86c0-456038530448",
+                name: "public network", description: "public flat network",
+                status: "ACTIVE", state: "up",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                }
+              },
+              {
+                id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+                uuid: "ce652521-431b-4572-8e59-46ed53129736",
+                name: "private network #1", description: "private flat network",
+                status: "ACTIVE", state: "up",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Network:
+      description: 클러스터 네트워크의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              network:
+                $ref: 'schema.yaml#/ClusterNetwork'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            network: {
+              id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+              uuid: "ce652521-431b-4572-8e59-46ed53129736",
+              name: "private network #1", description: "private flat network",
+              status: "ACTIVE", state: "up",
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              tenant: {
+                id: 1, name: "admin", enabled: true,
+                uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+              },
+              subnets: [
+                {
+                  id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+                  name: "subnet #1", description: "subnet description",
+                  network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+                  dhcp_pools: [
+                    {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                    {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+                  ],
+                  gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+                  nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                },
+                {
+                  id: 3, uuid: "b0b12add-b494-4d71-9481-5250ea72bebe",
+                  name: "subnet #2", description: "subnet description",
+                  network_cidr: "192.168.2.0/24", dhcp_enabled: false,
+                  gateway_enabled: false,
+                  nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                }
+              ],
+              floating_ips: [
+                {
+                  id: 1, uuid: "2da474b7-835b-4b22-9ae8-903ad470b9aa",
+                  description: "floating ip description",
+                  ip_address: "10.1.1.220", status: "ACTIVE"
+                }
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Subnet:
+      description: 클러스터 서브넷의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              subnet:
+                $ref: 'schema.yaml#/ClusterSubnet'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            subnet: {
+              id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+              name: "subnet #1", description: "subnet description",
+              network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+              dhcp_pools: [
+                {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+              ],
+              gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+              nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    FloatingIP:
+      description: 클러스터 FloatingIP 의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              floating_ip:
+                $ref: 'schema.yaml#/ClusterFloatingIP'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            floating_ip: {
+              id: 1, uuid: "2da474b7-835b-4b22-9ae8-903ad470b9aa",
+              description: "floating ip description",
+              ip_address: "10.1.1.220", status: "ACTIVE"
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

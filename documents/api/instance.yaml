@@ -1,0 +1,568 @@
+Resource:
+  get:
+    summary: 클러스터 인스턴스 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01511
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: '#/components/parameters/AvailabilityZoneID'
+      - $ref: '#/components/parameters/HypervisorID'
+      - $ref: '#/components/parameters/VolumeID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: '#/components/parameters/Name'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Instances'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 인스턴스 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01521
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/InstanceID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Instance'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+KeyPair:
+  get:
+    summary: 클러스터 KeyPair 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01523
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/KeyPairID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/KeyPair'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+UserScript:
+  get:
+    summary: 인스턴스 User Script 조회
+    description: 설명추가
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/InstanceID'
+    responses:
+      200:
+        $ref: '#/components/responses/UserScript'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+  patch:
+    summary: 인스턴스 User Script 수정
+    description: 설명추가
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/InstanceID'
+    requestBody:
+      $ref: '#/components/requestBodies/UserScript'
+    responses:
+      201:
+        $ref: '#/components/responses/Message'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      409:
+        description: Conflict
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    InstanceID:
+      in: path
+      name: cluster_instance_id
+      description: 클러스터 인스턴스 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    KeyPairID:
+      in: path
+      name: cluster_keypair_id
+      description: 클러스터 KeyPair ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: query
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      schema:
+        type: integer
+        format: uint64
+
+    AvailabilityZoneID:
+      in: query
+      name: cluster_availability_zone_id
+      description: 클러스터 가용구역 ID
+      schema:
+        type: integer
+        format: uint64
+
+    HypervisorID:
+      in: query
+      name: cluster_hypervisor_id
+      description: 클러스터 Hypervisor ID
+      schema:
+        type: integer
+        format: uint64
+
+    VolumeID:
+      in: query
+      name: cluster_volume_id
+      description: 클러스터 볼륨 ID
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 인스턴스 ID
+      schema:
+        type: string
+
+    Name:
+      in: query
+      name: name
+      description: 인스턴스 이름
+      schema:
+        type: string
+
+  requestBodies:
+    UserScript:
+      content:
+        application/json:
+          schema:
+            description: 인스턴스의 User Script
+            type: object
+            properties:
+              user_data:
+                description: User Script 데이터
+                type: string
+          example: {
+            user_data:
+              "
+              #!/bin/bash
+
+              ## install package
+              echo '## START : install package ##'
+                yum install -y sshpass
+                echo '## END: install package ##'
+              "
+          }
+
+  responses:
+    Instances:
+      description: 클러스터 인스턴스 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              instances:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterInstance'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            instances: [
+              {
+                id: 1, uuid: "08b3bf8b-0e17-41fa-9836-acbec782716b",
+                name: "instance #001",
+                status: "ACTIVE", state: "1",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                },
+                availability_zone: {
+                  id: 1, name: "nova", available: true
+                },
+                hypervisor: {
+                  id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", hostname: "localhost", ip_address: "1.1.1.1",
+                  vcpu_total_cnt: 32, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                  status: "enabled", state: "up",
+                }
+              },
+              {
+                id: 2, uuid: "042a8507-064b-43bd-9db4-eccbd276ba82",
+                name: "instance #002",
+                status: "ACTIVE", state: "1",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                },
+                availability_zone: {
+                  id: 1, name: "nova", available: true
+                },
+                hypervisor: {
+                  id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", hostname: "localhost", ip_address: "1.1.1.1",
+                  vcpu_total_cnt: 32, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                  status: "enabled", state: "up",
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Instance:
+      description: 클러스터 인스턴스의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              instance:
+                $ref: 'schema.yaml#/ClusterInstance'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            instance: {
+              id: 1, uuid: "08b3bf8b-0e17-41fa-9836-acbec782716b",
+              name: "instance #001", description: "instance description",
+              status: "ACTIVE", state: "1",
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              tenant: {
+                id: 1, name: "admin", enabled: true,
+                uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+              },
+              availability_zone: {
+                id: 1, name: "nova", available: true
+              },
+              hypervisor: {
+                id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", hostname: "localhost", ip_address: "1.1.1.1",
+                vcpu_total_cnt: 32, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                status: "enabled", state: "up",
+              },
+              keypair: {
+                id: 1, name: "keypair #1", fingerprint: "da:47:93:b4:3a:90:5b:50:1f:20:a8:f9:b7:a1:d0:e1",
+                public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw85CkkctyDZTwveoVky/NAZggGnjqp3EPh2I62fY2mERYd9jqf9ZcSxFGbx449Lq8UySPSPdIESYUvJoqTVgjfN0DxSoNXDW58Yam18KoixqVWyIk+l/n1T195ZX8bU00CpYoO2vqLNQ1zl8PRhDZ/WtrxT9SfHl/HLOwUTGjDjrd84JjCyyIclPjwIPdGOn/wRd8JK8643/CpIVb2/ZvTa6nf8hb/l4LEq5TVUekV3mGN74/UmfyQ1LC43pbsoxfb51MNmIEJIT1dBdc/aP4HQf2Mp901Ee588xvFFJXHcCvNM4birtYxPvN1lxhH4AIeL7Hz+sDTVrSyJmH92fXtuI+uCrl/Izkuzp6Jwk9d4fWihxpjksvI5H/f2XxnSWh+EHoCvW0k5pkNgHXPjMce4AlaqGtrVWyTxMd3V6OMxXr7p/4GfapTWvc8tIyGt9od5h/Wket5df3YlaxY8RMK2dPJyTi8IdxHL2TFmUsCxyVuEzl+YLUWs/YpX3oA5k= khlee@localhost.localdomain",
+                type_code: "ssh"
+              },
+              spec: {
+                id: 1, uuid: "1", name: "small server spec #1", description: "flavor description",
+                vcpu_total_cnt: 4, mem_total_bytes: 4295000000, disk_total_bytes: 4295000000,
+                swap_total_bytes: 4295000, ephemeral_total_bytes: 4295000,
+                extra_specs: []
+              },
+              networks: [
+                {
+                  id: 1,
+                  network: {
+                    id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+                    uuid: "ce652521-431b-4572-8e59-46ed53129736",
+                    name: "private network #1", description: "private flat network"
+                  },
+                  subnet: {
+                    id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+                    name: "subnet #1",
+                    network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+                    dhcp_pools: [
+                      {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                      {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+                    ],
+                    gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+                    nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                  },
+                  floating_ip: {
+                    id: 1, uuid: "2da474b7-835b-4b22-9ae8-903ad470b9aa",
+                    description: "floating ip description",
+                    ip_address: "10.1.1.220", status: "ACTIVE"
+                  },
+                  dhcp_flag: true,
+                  ip_address: "192.168.1.212"
+                }
+              ],
+              routers: [
+                {
+                  id: 1, uuid: "397cf931-7a31-43fe-98c6-e9a8e7d5a57a",
+                  name: "router #1", description: "router description",
+                  status: "ACTIVE", state: "up",
+                  internal_routing_interfaces: [
+                    {
+                      network: {
+                        id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+                        uuid: "ce652521-431b-4572-8e59-46ed53129736",
+                        name: "private network #1", description: "private flat network"
+                      },
+                      subnet: {
+                        id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+                        name: "subnet #1",
+                        network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+                        dhcp_pools: [
+                          {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                          {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+                        ],
+                        gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+                        nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                      },
+                      ip_address: "192.168.1.11"
+                    }
+                  ],
+                  external_routing_interfaces: [
+                    {
+                      network: {
+                        id: 1, external_flag: true, type_code: "openstack.network.type.flat",
+                        uuid: "6ea9b9cf-50b1-43de-86c0-456038530448",
+                        name: "public network", description: "public flat network"
+                      },
+                      subnet: {
+                        id: 1, uuid: "bd797d18-8858-4cc5-b1cb-b5ad0cd1841c",
+                        name: "subnet #0",
+                        network_cidr: "10.1.1.0/24",
+                        gateway_enabled: true, gateway_ip_address: "10.1.1.254",
+                        nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                      },
+                      ip_address: "10.1.1.100"
+                    }
+                  ],
+                  extra_routes: [
+                    {
+                      id: 1, destination: "172.12.0.0/16", nexthop: "10.1.1.55"
+                    }
+                  ]
+                }
+              ],
+              security_groups: [
+                {
+                  id: 1, uuid: "22bdae7c-8d34-4f40-b79a-b3e379ff27dc",
+                  name: "security group #1", description: "security group description",
+                  rules: [
+                    {
+                      id: 1, uuid: "68a31847-9bb4-46f6-9b21-5e38a9f75079",
+                      direction: "ingress", description: "security group rule description",
+                      ether_type: 4, network_cidr: "0.0.0.0/0", port_range_max: 80, port_range_min: 80, protocol: "tcp",
+                      remote_security_group: {
+                        id: 2, uuid: "a406c6bd-afd2-4c8a-8b6e-fe104038056e",
+                        name: "security group #2", description: "security group description"
+                      }
+                    }
+                  ]
+                }
+              ],
+              volumes: [
+                {
+                  storage: {
+                    id: 1, type_code: "openstack.storage.type.ceph",
+                    uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3", name: "ceph #001"
+                  },
+                  volume: {
+                    id: 1, uuid: "a5bac8fd-de7d-4646-b8ec-02505e4f169a", name: "volume #001",
+                    size_bytes: 42950000, multiattach: true, bootable: false, readonly: false
+                  },
+                  device_path: "/dev/sdc",
+                  boot_index: 0
+                },
+                {
+                  storage: {
+                    id: 1, type_code: "openstack.storage.type.ceph",
+                    uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3", name: "ceph #001"
+                  },
+                  volume: {
+                    id: 2, uuid: "ac73cddf-f1c3-4358-bf07-e0b36a0751b6", name: "volume #002",
+                    size_bytes: 42950000, multiattach: false, bootable: false, readonly: false
+                  },
+                  device_path: "/dev/sdd",
+                  boot_index: 1
+                }
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    KeyPair:
+      description: 클러스터 Keypair 의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              keypair:
+                $ref: 'schema.yaml#/ClusterKeyPair'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            keypair: {
+              id: 1,
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              name: "keypair #1", fingerprint: "da:47:93:b4:3a:90:5b:50:1f:20:a8:f9:b7:a1:d0:e1",
+              public_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCw85CkkctyDZTwveoVky/NAZggGnjqp3EPh2I62fY2mERYd9jqf9ZcSxFGbx449Lq8UySPSPdIESYUvJoqTVgjfN0DxSoNXDW58Yam18KoixqVWyIk+l/n1T195ZX8bU00CpYoO2vqLNQ1zl8PRhDZ/WtrxT9SfHl/HLOwUTGjDjrd84JjCyyIclPjwIPdGOn/wRd8JK8643/CpIVb2/ZvTa6nf8hb/l4LEq5TVUekV3mGN74/UmfyQ1LC43pbsoxfb51MNmIEJIT1dBdc/aP4HQf2Mp901Ee588xvFFJXHcCvNM4birtYxPvN1lxhH4AIeL7Hz+sDTVrSyJmH92fXtuI+uCrl/Izkuzp6Jwk9d4fWihxpjksvI5H/f2XxnSWh+EHoCvW0k5pkNgHXPjMce4AlaqGtrVWyTxMd3V6OMxXr7p/4GfapTWvc8tIyGt9od5h/Wket5df3YlaxY8RMK2dPJyTi8IdxHL2TFmUsCxyVuEzl+YLUWs/YpX3oA5k= khlee@localhost.localdomain",
+              type_code: "ssh",
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    UserScript:
+      description: 인스턴스 user script 의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user_data:
+                description: User Script 데이터
+                type: string
+              message:
+                $ref: 'schema.yaml#/Message'
+            example: {
+              user_data:
+                "
+                #!/bin/bash
+
+                ## install package
+                echo '## START : install package ##'
+                  yum install -y sshpass
+                  echo '## END: install package ##'
+                ",
+              message: {
+                code: "message code",
+                contents: "message contents"
+              }
+            }
+
+    Message:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

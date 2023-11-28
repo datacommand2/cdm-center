@@ -1,0 +1,260 @@
+Resource:
+  get:
+    summary: 클러스터 네트워크 라우터 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01431
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: '#/components/parameters/NetworkID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Routers'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 네트워크 라우터 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01432
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/RouterID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Router'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: query
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      schema:
+        type: integer
+        format: uint64
+
+    RouterID:
+      in: path
+      name: cluster_router_id
+      description: 클러스터 네트워크 라우터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    NetworkID:
+      in: query
+      name: cluster_network_id
+      description: 클러스터 네트워크 ID (내부 네트워크)
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 네트워크 라우터 ID
+      schema:
+        type: string
+
+  responses:
+    Routers:
+      description: 클러스터 네트워크 라우터 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              routers:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterRouter'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            routers: [
+              {
+                id: 1, uuid: "397cf931-7a31-43fe-98c6-e9a8e7d5a57a",
+                name: "router #1", description: "router description",
+                status: "ACTIVE", state: "up",
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                },
+                internal_routing_interfaces: [
+                  {
+                    network: {
+                      id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+                      uuid: "ce652521-431b-4572-8e59-46ed53129736",
+                      name: "private network #1", description: "private flat network"
+                    },
+                    subnet: {
+                      id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+                      name: "subnet #1",
+                      network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+                      dhcp_pools: [
+                        {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                        {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+                      ],
+                      gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+                      nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                    },
+                    ip_address: "192.168.1.11"
+                  }
+                ],
+                external_routing_interfaces: [
+                  {
+                    network: {
+                      id: 1, external_flag: true, type_code: "openstack.network.type.flat",
+                      uuid: "6ea9b9cf-50b1-43de-86c0-456038530448",
+                      name: "public network", description: "public flat network"
+                    },
+                    subnet: {
+                      id: 1, uuid: "bd797d18-8858-4cc5-b1cb-b5ad0cd1841c",
+                      name: "subnet #0",
+                      network_cidr: "10.1.1.0/24",
+                      gateway_enabled: true, gateway_ip_address: "10.1.1.254",
+                      nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                    },
+                    ip_address: "10.1.1.100"
+                  }
+                ],
+                extra_routes: [
+                  {
+                    id: 1, destination: "172.12.0.0/16", nexthop: "10.1.1.55"
+                  }
+                ]
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Router:
+      description: 클러스터 네트워크 라우터 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              router:
+                $ref: 'schema.yaml#/ClusterRouter'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            router: {
+              id: 1, uuid: "397cf931-7a31-43fe-98c6-e9a8e7d5a57a",
+              name: "router #1", description: "router description",
+              status: "ACTIVE", state: "up",
+              tenant: {
+                id: 1, name: "admin", enabled: true,
+                uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+              },
+              internal_routing_interfaces: [
+                {
+                  network: {
+                    id: 2, external_flag: false, type_code: "openstack.network.type.flat",
+                    uuid: "ce652521-431b-4572-8e59-46ed53129736",
+                    name: "private network #1", description: "private flat network"
+                  },
+                  subnet: {
+                    id: 2, uuid: "1ea67854-f8b6-4f7f-964f-3c96ca20b698",
+                    name: "subnet #1",
+                    network_cidr: "192.168.1.0/24", dhcp_enabled: true,
+                    dhcp_pools: [
+                      {id: 1, start_ip_address: "192.168.1.100", end_ip_address: "192.168.1.150"},
+                      {id: 2, start_ip_address: "192.168.1.200", end_ip_address: "192.168.1.255"}
+                    ],
+                    gateway_enabled: true, gateway_ip_address: "192.168.1.1",
+                    nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                  },
+                  ip_address: "192.168.1.11"
+                }
+              ],
+              external_routing_interfaces: [
+                {
+                  network: {
+                    id: 1, external_flag: true, type_code: "openstack.network.type.flat",
+                    uuid: "6ea9b9cf-50b1-43de-86c0-456038530448",
+                    name: "public network", description: "public flat network"
+                  },
+                  subnet: {
+                    id: 1, uuid: "bd797d18-8858-4cc5-b1cb-b5ad0cd1841c",
+                    name: "subnet #0",
+                    network_cidr: "10.1.1.0/24",
+                    gateway_enabled: true, gateway_ip_address: "10.1.1.254",
+                    nameservers: [{id: 1, nameserver: "8.8.8.8"}]
+                  },
+                  ip_address: "10.1.1.100"
+                }
+              ],
+              extra_routes: [
+                {
+                  id: 1, destination: "172.12.0.0/16", nexthop: "10.1.1.55"
+                }
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

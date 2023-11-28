@@ -1,0 +1,261 @@
+Resource:
+  get:
+    summary: 클러스터 볼륨 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01611
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: '#/components/parameters/StorageID'
+      - $ref: '#/components/parameters/InstanceID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: '#/components/parameters/Name'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Volumes'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 볼륨 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01621
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/VolumeID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Volume'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    VolumeID:
+      in: path
+      name: cluster_volume_id
+      description: 클러스터 볼륨 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: query
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      schema:
+        type: integer
+        format: uint64
+
+    StorageID:
+      in: query
+      name: cluster_storage_id
+      description: 클러스터 볼륨타입 ID
+      schema:
+        type: integer
+        format: uint64
+
+    InstanceID:
+      in: query
+      name: cluster_instance_id
+      description: 클러스터 인스턴스 ID
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 볼륨 ID
+      schema:
+        type: string
+
+    Name:
+      in: query
+      name: name
+      description: 볼륨 이름
+      schema:
+        type: string
+
+  responses:
+    Volumes:
+      description: 클러스터 볼륨 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              volumes:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterVolume'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            volumes: [
+              {
+                id: 1, uuid: "a5bac8fd-de7d-4646-b8ec-02505e4f169a", name: "volume #001",
+                size_bytes: 42950000, multiattach: true, bootable: false, readonly: false,
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                },
+                storage: {
+                  id: 1, type_code: "openstack.storage.type.ceph",
+                  uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3", name: "ceph #001"
+                },
+                snapshots: [
+                  {
+                    id: 1,
+                    uuid: "2acd31e6-ec97-46f2-abf7-923402a14832",
+                    cluster_volume_group_snapshot_uuid: "b73a6b45-cd5c-4820-91a3-5c23059619c7",
+                    name: "snapshot #001",
+                    description: "snapshot description",
+                    size_bytes: 42950000,
+                    status: "available",
+                    created_at: 1618812027,
+                  }
+                ]
+              },
+              {
+                id: 2, uuid: "ac73cddf-f1c3-4358-bf07-e0b36a0751b6", name: "volume #002",
+                size_bytes: 42950000, multiattach: false,
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                },
+                storage: {
+                  id: 1, type_code: "openstack.storage.type.ceph",
+                  uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3", name: "ceph #001"
+                }, snapshots: [
+                  {
+                    id: 1,
+                    uuid: "6e8a2f45-183f-4031-aab7-0648b187cfb3",
+                    cluster_volume_group_snapshot_uuid: "995762f1-c636-4d1b-9477-9d54671ed238",
+                    name: "snapshot #001",
+                    description: "snapshot description",
+                    size_bytes: 42950000,
+                    status: "available",
+                    created_at: 1618812027,
+                  }
+                ]
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Volume:
+      description: 클러스터 볼륨 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              volume:
+                $ref: 'schema.yaml#/ClusterVolume'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            volume: {
+              id: 1, uuid: "a5bac8fd-de7d-4646-b8ec-02505e4f169a",
+              name: "volume #001", description: "volume description",
+              size_bytes: 42950000, multiattach: true, bootable: false, readonly: false,
+              status: "available",
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              tenant: {
+                id: 1, name: "admin", enabled: true,
+                uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+              },
+              storage: {
+                id: 1, type_code: "openstack.storage.type.ceph",
+                uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3", name: "ceph #001"
+              },
+              snapshots: [
+                {
+                  id: 1,
+                  uuid: "a5bac8fd-de7d-4646-b8ec-02505e4f169a",
+                  cluster_volume_group_snapshot_uuid: "88e9c4b7-aa17-4d64-a088-6756dc7c60a4",
+                  name: "snapshot #001",
+                  description: "snapshot description",
+                  size_bytes: 42950000,
+                  status: "available",
+                  created_at: 1618812027,
+                }
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

@@ -1,0 +1,213 @@
+Resource:
+  get:
+    summary: 클러스터 테넌트 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01311
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Tenants'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 테넌트 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01321
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Tenant'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: path
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 테넌트 ID
+      schema:
+        type: string
+
+  responses:
+    Tenants:
+      description: 클러스터 테넌트 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tenants:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterTenant'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            tenants: [
+              {
+                id: 1,
+                uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25",
+                name: "admin",
+                enabled: true,
+                cluster: {
+                  id: 1,
+                  name: "대전센터 OpenStack #001",
+                  state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              },
+              {
+                id: 2,
+                uuid: "a9762b03-222d-4349-b73a-78f8828fb06d",
+                name: "project #1",
+                enabled: true,
+                cluster: {
+                  id: 1,
+                  name: "대전센터 OpenStack #001",
+                  state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Tenant:
+      description: 클러스터 테넌트 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tenant:
+                $ref: 'schema.yaml#/ClusterTenant'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            tenant: {
+              id: 1,
+              uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25",
+              name: "admin",
+              enabled: true,
+              description: "Admin tenant",
+              cluster: {
+                id: 1,
+                name: "대전센터 OpenStack #001",
+                state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              quotas: [
+                { key: "instances", value: 0 },
+                { key: "key_pairs", value: 0 },
+                { key: "metadata_items", value: 0 },
+                { key: "ram", value: 0 },
+                { key: "server_groups", value: 0 },
+                { key: "server_group_members", value: 0 },
+                { key: "fixed_ips", value: 0 },
+                { key: "floating_ips", value: 0 },
+                { key: "networks", value: 0 },
+                { key: "security_group_rules", value: 0 },
+                { key: "security_groups", value: 0 },
+                { key: "injected_file_content_bytes", value: 0 },
+                { key: "injected_file_path_bytes", value: 0 },
+                { key: "injected_files", value: 0 },
+                { key: "backup_gigabytes", value: 0 },
+                { key: "backups", value: 0 },
+                { key: "gigabytes", value: 0 },
+                { key: "gigabytes_{volume_type}", value: 0 },
+                { key: "groups", value: 0 },
+                { key: "per_volume_gigabytes", value: 0 },
+                { key: "snapshots", value: 0 },
+                { key: "snapshots_{volume_type}", value: 0 },
+                { key: "volumes", value: 0 },
+                { key: "volumes_{volume_type}", value: 0 },
+                { key: "floatingip", value: 0 },
+                { key: "network", value: 0 },
+                { key: "port", value: 0 },
+                { key: "rbac_policy", value: 0 },
+                { key: "router", value: 0 },
+                { key: "security_group", value: 0 },
+                { key: "security_group_rule", value: 0 },
+                { key: "subnet", value: 0 },
+                { key: "subnetpool", value: 0 }
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

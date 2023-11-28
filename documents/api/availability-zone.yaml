@@ -1,0 +1,165 @@
+Resource:
+  get:
+    summary: 클러스터 가용구역 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01211
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/AvailabilityZones'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 가용구역 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01221
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/AvailabilityZoneID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/AvailabilityZone'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    AvailabilityZoneID:
+      in: path
+      name: cluster_availability_zone_id
+      description: 클러스터 가용구역 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+  responses:
+    AvailabilityZones:
+      description: 클러스터 가용구역 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              availability_zones:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterAvailabilityZone'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            availability_zones: [
+              {
+                id: 1, name: "nova", available: true,
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              },
+              {
+                id: 2, name: "nova2", available: true,
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    AvailabilityZone:
+      description: 클러스터 가용구역의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              availability_zone:
+                type: object
+                allOf: [$ref: 'schema.yaml#/ClusterAvailabilityZone']
+                properties:
+                  hypervisors:
+                    description: 가용구역의 Hypervisor 목록
+                    type: array
+                    items:
+                      $ref: 'schema.yaml#/ClusterHypervisor'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            availability_zone: {
+              id: 1, name: "nova", available: true,
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              hypervisors: [
+                {id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", type_code: "openstack.hypervisor.type.kvm", hostname: "localhost", ip_address: "1.1.1.1", status: "enabled", state: "up",},
+                {id: 2, uuid: "df4bb140-7e71-4435-8f75-ea301d8f8ce5", type_code: "openstack.hypervisor.type.kvm", hostname: "localhost", ip_address: "1.1.1.2", status: "enabled", state: "up",},
+              ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

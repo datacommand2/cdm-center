@@ -1,0 +1,249 @@
+Resource:
+  get:
+    summary: 클러스터 볼륨타입 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01711
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TypeCode'
+      - $ref: '#/components/parameters/Name'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Storages'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 볼륨타입 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01721
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/StorageID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Storage'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+  patch:
+    summary: 클러스터 볼륨타입 메타데이터 수정
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01741
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/StorageID'
+    requestBody:
+      $ref: '#/components/requestBodies/Metadata'
+    responses:
+      200:
+        $ref: '#/components/responses/Metadata'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    StorageID:
+      in: path
+      name: cluster_storage_id
+      description: 클러스터 스토리지 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    TypeCode:
+      in: query
+      name: type_code
+      description: 스토리지 종류
+      schema:
+        type: string
+
+    Name:
+      in: query
+      name: name
+      description: 스토리지 이름
+      schema:
+        type: string
+
+  requestBodies:
+    Metadata:
+      content:
+        application/json:
+          schema:
+            description: 메타데이터
+            type: object
+            properties:
+              metadata:
+                type: object
+          examples:
+            ceph:
+              value: {
+                metadata: {
+                  admin_client: "admin",
+                  admin_keyring: "Ae+/ve+/ve+/vWAi77+977+9JBDvv70zElnvv73="
+                }
+              }
+
+  responses:
+    Storages:
+      description: 클러스터 볼륨타입 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              storages:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterStorage'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            storages: [
+              {
+                id: 1, type_code: "openstack.storage.type.ceph",
+                uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3",
+                name: "ceph #001", description: "ceph storage",
+                capacity_bytes: 4295000000, used_bytes: 1024000000,
+                status: "available",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              },
+              {
+                id: 2, type_code: "openstack.storage.type.ceph",
+                uuid: "0af606db-ecd5-4397-b319-cab280ff850d",
+                name: "ceph #002", description: "ceph storage",
+                capacity_bytes: 4295000000, used_bytes: 1024000000,
+                status: "available",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Storage:
+      description: 클러스터 볼륨타입 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              storage:
+                $ref: 'schema.yaml#/ClusterStorage'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            storage: {
+              id: 1, type_code: "openstack.storage.type.ceph",
+              uuid: "646d7a47-9c93-4822-a566-cbc61d6ec8b3",
+              name: "ceph #001", description: "ceph storage",
+              capacity_bytes: 4295000000, used_bytes: 1024000000,
+              status: "available",
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              }
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Metadata:
+      description: 클러스터 볼륨타입 메타데이터를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                type: object
+          examples:
+            ceph:
+              value: {
+                metadata: {
+                  admin_client: "admin",
+                  admin_keyring: "Ae+/ve+/ve+/vWAi77+977+9JBDvv70zElnvv73="
+                }
+              }

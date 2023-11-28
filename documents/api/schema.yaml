@@ -1,0 +1,1243 @@
+Pagination:
+  description: 목록조회 페이지 정보
+  type: object
+  properties:
+    page:
+      description: 현재 페이지
+      type: integer
+      format: int64
+    total_page:
+      description: 전체 페이지의 수
+      type: integer
+      format: int64
+    total_items:
+      description: 검색된 아이템 전체 아이템 수
+      type: integer
+      format: int64
+
+Message:
+  description: 메세지
+  type: object
+  properties:
+    code:
+      description: 메세지 코드
+      type: string
+    contents:
+      description: 메세지 코드 상세 내용
+      type: string
+
+Cluster:
+  description: 클러스터
+  type: object
+  properties:
+    id:
+      description: 클러스터의 ID
+      type: integer
+      format: uint64
+    owner_group:
+      $ref: 'http://10.1.1.220/cdm/cdm-cloud/documents/-/raw/master/api/schemas.yaml#/UserGroup'
+    permissions:
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterPermission'
+    name:
+      description: 클러스터의 이름
+      type: string
+    remarks:
+      description: 비고
+      type: string
+    type_code:
+      description: 클러스터의 종류
+      type: string
+      enum:
+        - "cluster.type.openstack"
+        - "cluster.type.openshift"
+        - "cluster.type.kubernetes"
+        - "cluster.type.vmware"
+    api_server_url:
+      description: 클러스터의 API Server URL
+      type: string
+    credential:
+      description: |
+        클러스터의 API Credential의 암호문
+        ## Openstack
+        **password authentication:**
+        ```json
+        {
+          "methods": ["password"],
+          "password": {
+            "user": {
+              "name": "admin",
+              "domain": {
+                "name": "admin"
+              },
+              "password": "password"
+            }
+          }
+        }
+        ```
+      type: string
+    state_code:
+      description: 클러스터의 상태 코드
+      type: string
+      enum:
+        - "cluster.state.active"
+        - "cluster.state.inactive"
+    created_at:
+      description: 클러스터 등록 일시 (Timestamp)
+      type: integer
+      format: int64
+    updated_at:
+      description: 클러스터 최종 수정 일시 (Timestamp)
+      type: integer
+      format: int64
+    synchronized_at:
+      description: 클러스터 최종 동기화 일시 (Timestamp)
+      type: integer
+      format: int64
+
+ClusterPermission:
+  description: 클러스터 권한
+  type: object
+  properties:
+    group:
+      $ref: 'http://10.1.1.220/cdm/cdm-cloud/documents/-/raw/master/api/schemas.yaml#/UserGroup'
+    mode_code:
+      type: string
+      enum:
+        - "cluster.permission.mode.readonly"
+        - "cluster.permission.mode.readwrite"
+
+ClusterHypervisor:
+  description: 클러스터 Hypervisor
+  type: object
+  properties:
+    id:
+      description: 클러스터 Hypervisor 의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    availability_zone:
+      $ref: 'schema.yaml#/ClusterAvailabilityZone'
+    uuid:
+      description: 클러스터에서의 Hypervisor ID
+      type: string
+    type_code:
+      description: 클러스터 Hypervisor 의 종류
+      type: string
+      enum:
+        - "openstack.hypervisor.type.kvm"
+        - "openstack.hypervisor.type.lxc"
+        - "openstack.hypervisor.type.qemu"
+        - "openstack.hypervisor.type.uml"
+        - "openstack.hypervisor.type.vmware"
+        - "openstack.hypervisor.type.xen"
+        - "openstack.hypervisor.type.xenserver"
+        - "openstack.hypervisor.type.hyper-v"
+        - "openstack.hypervisor.type.virtuozzo"
+    hostname:
+      description: 클러스터 Hypervisor 의 호스트네임
+      type: string
+    ip_address:
+      description: 클러스터 Hypervisor 의 IP 주소
+      type: string
+    vcpu_total_cnt:
+      description: 클러스터 Hypervisor 의 CPU 코어 갯수 (core)
+      type: integer
+      format: uint32
+    vcpu_used_cnt:
+      description: 클러스터 Hypervisor 의 사용중인 VCPU 갯수
+      type: integer
+      format: uint32
+    mem_total_bytes:
+      description: 클러스터 Hypervisor 의 총 메모리 용량 (bytes)
+      type: integer
+      format: uint64
+    mem_used_bytes:
+      description: 클러스터 Hypervisor 의 사용중인 메모리 용량 (bytes)
+      type: integer
+      format: uint64
+    disk_total_bytes:
+      description: 클러스터 Hypervisor 의 총 디스크 용량 (bytes)
+      type: integer
+      format: uint64
+    disk_used_bytes:
+      description: 클러스터 Hypervisor 의 사용중인 디스크 용량 (bytes)
+      type: integer
+      format: uint64
+    status:
+      description: Hypervisor 상태
+      type: string
+      enum:
+        - "enabled"
+        - "disabled"
+    state:
+      description: Hypervisor 상태
+      type: string
+      enum:
+        - "up"
+        - "down"
+    ssh_port:
+      description: 클러스터 Hypervisor SSH 접속 Port
+      type: integer
+      format: uint32
+      minimum: 1
+      maximum: 65535
+    ssh_account:
+      description: 클러스터 Hypervisor SSH 접속 Account
+      type: string
+    ssh_password:
+      description: 클러스터 Hypervisor SSH 접속 Password
+      type: string
+    agent_port:
+      description: Agent Bind Port
+      type: integer
+      format: uint32
+      minimum: 1
+      maximum: 65535
+    agent_version:
+      description: Agent 버전
+      type: string
+    agent_installed_at:
+      description: Agemt 최초 설치 일시 (Timestamp)
+      type: integer
+      format: int64
+    agent_last_upgraded_at:
+      description: Agemt 최종 업데이트 일시 (Timestamp)
+      type: integer
+      format: int64
+
+ClusterAvailabilityZone:
+  description: 클러스터 가용구역
+  type: object
+  properties:
+    id:
+      description: 클러스터 가용구역의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    name:
+      description: 클러스터 가용구역의 이름
+      type: string
+    available:
+      description: 가용구역의 가용여부
+      type: boolean
+
+ClusterTenant:
+  description: 클러스터 테넌트
+  type: object
+  properties:
+    id:
+      description: 클러스터 테넌트의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    uuid:
+      description: 클러스터에서의 테넌트 ID
+      type: string
+    name:
+      description: 클러스터 테넌트의 이름
+      type: string
+    description:
+      description: 클러스터 테넌트의 설명
+      type: string
+    enabled:
+      description: 클러스터 테넌트 활성화 여부
+      type: boolean
+    quotas:
+      description: 클러스터 테넌트 Quota 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterTenantQuota'
+
+ClusterTenantQuota:
+  description: 클러스터 테넌트 Quota
+  type: object
+  properties:
+    key:
+      description: Quota Key
+      type: string
+    value:
+      description: Quota Value
+      type: integer
+      format: int64
+
+ClusterNetwork:
+  description: 클러스터 네트워크
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    tenant:
+      $ref: 'schema.yaml#/ClusterTenant'
+    type_code:
+      description: 네트워크 타입
+      type: string
+      enum:
+        - "openstack.network.type.vlan"
+        - "openstack.network.type.vxlan"
+        - "openstack.network.type.gre"
+        - "openstack.network.type.flat"
+        - "openstack.network.type.local"
+    uuid:
+      description: 클러스터에서의 네트워크 ID
+      type: string
+    name:
+      description: 클러스터 네트워크의 이름
+      type: string
+    description:
+      description: 클러스터 네트워크의 설명
+      type: string
+    external_flag:
+      description: 외부 네트워크 여부
+      type: boolean
+    status:
+      description: 네트워크 상태
+      type: string
+      enum:
+        - "ACTIVE"
+        - "DOWN"
+        - "BUILD"
+        - "ERROR"
+    state:
+      description: 네트워크 상태
+      type: string
+      enum:
+        - "up"
+        - "down"
+    subnets:
+      description: 서브넷 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterSubnet'
+    floating_ips:
+      description: FloatingIP 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterFloatingIP'
+
+ClusterSubnet:
+  description: 클러스터 네트워크 서브넷
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크 서브넷의 ID
+      type: integer
+      format: uint64
+    uuid:
+      description: 클러스터에서의 네트워크 서브넷 ID
+      type: string
+    name:
+      description: 클러스터 네트워크 서브넷의 이름
+      type: string
+    description:
+      description: 클러스터 네트워크 서브넷의 설명
+      type: string
+    network_cidr:
+      description: 클러스터 네트워크 서브넷의 네트워크 CIDR
+      type: string
+    dhcp_enabled:
+      description: DHCP 활성화 여부
+      type: boolean
+    dhcp_pools:
+      description: DHCP 할당 범위 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterSubnetDHCPPool'
+    gateway_enabled:
+      description: 게이트웨이 활성화 여부
+      type: boolean
+    gateway_ip_address:
+      description: 게이트웨이 주소
+      type: string
+    ipv6_address_mode_code:
+      description: ipv6 의 ip 주소 할당 방법
+      type: string
+      enum:
+        - "slaac"
+        - "dhcpv6-stateful"
+        - "dhcpv6-stateless"
+    ipv6_ra_mode_code:
+      description: ipv6 의 router advertisement 방법
+      type: string
+      enum:
+        - "slaac"
+        - "dhcpv6-stateful"
+        - "dhcpv6-stateless"
+    nameservers:
+      description: 클러스터 네트워크 서브넷의 Nameserver 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterSubnetNameserver'
+
+ClusterSubnetNameserver:
+  description: 클러스터 네트워크 서브넷의 Nameserver
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크 서브넷 Nameserver 의 ID
+      type: integer
+      format: uint64
+    nameserver:
+      description: 네임서버 주소
+      type: string
+
+ClusterSubnetDHCPPool:
+  description: 클러스터 네트워크 서브넷의 DHCP Pool
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크 서브넷 DHCP Pool 의 ID
+      type: integer
+      format: uint64
+    start_ip_address:
+      description: 할당 범위 시작 주소
+      type: string
+    end_ip_address:
+      description: 할당 범위 종료 주소
+      type: string
+
+ClusterRouter:
+  description: 클러스터 네트워크 라우터
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크 라우터의 ID
+      type: integer
+      format: uint64
+    tenant:
+      $ref: 'schema.yaml#/ClusterTenant'
+    uuid:
+      description: 클러스터에서의 네트워크 라우터 ID
+      type: string
+    name:
+      description: 클러스터 라우터의 이름
+      type: string
+    description:
+      description: 클러스터 라우터의 설명
+      type: string
+    internal_routing_interfaces:
+      description: 내부 네트워크로의 라우팅 인터페이스 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterNetworkRoutingInterface'
+    external_routing_interfaces:
+      description: 외부 네트워크로의 라우팅 인터페이스 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterNetworkRoutingInterface'
+    extra_routes:
+      description: 추가 라우트 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterRouterExtraRoute'
+    status:
+      description: 라우터 상태
+      type: string
+      enum:
+        - "ACTIVE"
+        - "DOWN"
+        - "BUILD"
+        - "ERROR"
+    state:
+      description: 라우터 상태
+      type: string
+      enum:
+        - "up"
+        - "down"
+
+ClusterRouterExtraRoute:
+  description: 클러스터 네트워크 추가 라우트
+  type: object
+  properties:
+    id:
+      description: 클러스터 네트워크 라우트의 ID
+      type: integer
+      format: uint64
+    destination:
+      description: 목적지 CIDR
+      type: string
+    nexthop:
+      description: 목적지에 대한 Nexthop IP 주소
+      type: string
+
+ClusterNetworkRoutingInterface:
+  description: 네트워크 라우터의 라우팅 인터페이스
+  type: object
+  properties:
+    network:
+      $ref: 'schema.yaml#/ClusterNetwork'
+    subnet:
+      $ref: 'schema.yaml#/ClusterSubnet'
+    ip_address:
+      description: 라우팅 인터페이스의 IP 주소
+      type: string
+
+ClusterStorage:
+  description: 클러스터 볼륨타입
+  properties:
+    id:
+      description: 클러스터 볼륨타입의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    uuid:
+      description: 클러스터에서의 볼륨타입 ID
+      type: string
+    name:
+      description: 클러스터 볼륨타입의 이름
+      type: string
+    description:
+      description: 클러스터 볼륨타입의 설명
+      type: string
+    type_code:
+      description: 클러스터 볼륨타입의 종류
+      type: string
+      enum:
+        - "openstack.storage.type.lvm"
+        - "openstack.storage.type.nfs"
+        - "openstack.storage.type.ceph"
+    capacity_bytes:
+      description: 클러스터 볼륨타입의 용량
+      type: integer
+      format: uint64
+    used_bytes:
+      description: 클러스터 볼륨타입의 사용량
+      type: integer
+      format: uint64
+
+ClusterVolume:
+  description: 클러스터 볼륨
+  type: object
+  properties:
+    id:
+      description: 클러스터 볼륨의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    tenant:
+      $ref: 'schema.yaml#/ClusterTenant'
+    storage:
+      $ref: 'schema.yaml#/ClusterStorage'
+    snapshots:
+      description: 클러스터 볼륨 스냅샷 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterVolumeSnapshot'
+    uuid:
+      description: 클러스터에서의 볼륨 ID
+      type: string
+    name:
+      description: 클러스터 볼륨의 이름
+      type: string
+    description:
+      description: 클러스터 볼륨의 설명
+      type: string
+    size_bytes:
+      description: 클러스터 볼륨의 용량
+      type: integer
+      format: uint64
+    multiattach:
+      description: 공유 가능 여부
+      type: boolean
+    bootable:
+      description: 부팅 가능 여부
+      type: boolean
+    readonly:
+      description: 읽기 전용 볼륨 여부
+      type: boolean
+    status:
+      description: 볼륨 상태
+      type: string
+      enum:
+        - "available"
+        - "error"
+        - "creating"
+        - "deleting"
+        - "in-use"
+        - "attaching"
+        - "detaching"
+        - "error_deleting"
+        - "maintenance"
+
+ClusterVolumeSnapshot:
+  description: 클러스터 볼륨 스냅샷
+  type: object
+  properties:
+    id:
+      description: 클러스터 볼륨 스냅샷의 ID
+      type: integer
+      format: uint64
+    uuid:
+      description: 클러스터에서의 볼륨 스냅샷 ID
+      type: string
+    cluster_volume_group_snapshot_uuid:
+      description: 클러스터에서의 볼륨 그룹 스냅샷 ID
+      type: string
+    name:
+      description: 클러스터 볼륨 스냅샷의 이름
+      type: string
+    description:
+      description: 클러스터 볼륨 스냅샷의 설명
+      type: string
+    size_bytes:
+      description: 클러스터 볼륨 스냅샷의 용량
+      type: integer
+      format: uint64
+    status:
+      description: 볼륨 스냅샷 상태
+      type: string
+      enum:
+        - "available"
+        - "error"
+        - "creating"
+        - "deleting"
+        - "error_deleting"
+    created_at:
+      description: 클러스터 볼륨 스냅샷 생성 일시 (Timestamp)
+      type: integer
+      format: int64
+
+ClusterInstance:
+  description: 클러스터 인스턴스
+  type: object
+  properties:
+    id:
+      description: 클러스터 인스턴스의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    tenant:
+      $ref: 'schema.yaml#/ClusterTenant'
+    availability_zone:
+      $ref: 'schema.yaml#/ClusterAvailabilityZone'
+    hypervisor:
+      $ref: 'schema.yaml#/ClusterHypervisor'
+    uuid:
+      description: 클러스터에서의 인스턴스 ID
+      type: string
+    name:
+      description: 클러스터 인스턴스의 이름
+      type: string
+    description:
+      description: 클러스터 인스턴스의 설명
+      type: string
+    status:
+      description: |
+        인스턴스 상태
+        - ACTIVE: The server is active.
+        - BUILD: The server has not yet finished the original build process.
+        - DELETED: The server is deleted.
+        - ERROR: The server is in error.
+        - HARD_REBOOT: The server is hard rebooting. This is equivalent to pulling the power plug on a physical server, plugging it back in, and rebooting it.
+        - MIGRATING: The server is migrating. This is caused by a live migration (moving a server that is active) action.
+        - PASSWORD: The password is being reset on the server.
+        - PAUSED: The server is paused.
+        - REBOOT: The server is in a soft reboot state. A reboot command was passed to the operating system.
+        - REBUILD: The server is currently being rebuilt from an image.
+        - RESCUE: The server is in rescue mode.
+        - RESIZE: Server is performing the differential copy of data that changed during its initial copy. Server is down for this stage.
+        - REVERT_RESIZE: The resize or migration of a server failed for some reason. The destination server is being cleaned up and the original source server is restarting.
+        - SHELVED: The server is in shelved state. Depends on the shelve offload time, the server will be automatically shelved off loaded.
+        - SHELVED_OFFLOADED: The shelved server is offloaded (removed from the compute host) and it needs unshelved action to be used again.
+        - SHUTOFF: The server was powered down by the user, either through the OpenStack Compute API or from within the server. For example, the user issued a shutdown -h command from within the server. If the OpenStack Compute manager detects that the VM was powered down, it transitions the server to the SHUTOFF status.
+        - SOFT_DELETED: The server is marked as deleted but will remain in the cloud for some configurable amount of time. While soft-deleted, an authorized user can restore the server back to normal state. When the time expires, the server will be deleted permanently.
+        - SUSPENDED: The server is suspended, either by request or necessity. See the feature support matrix for supported compute drivers. When you suspend a server, its state is stored on disk, all memory is written to disk, and the server is stopped. Suspending a server is similar to placing a device in hibernation and its occupied resource will not be freed but rather kept for when the server is resumed. If an instance is infrequently used and the occupied resource needs to be freed to create other servers, it should be shelved.
+        - UNKNOWN: The state of the server is unknown. It could be because a part of the infrastructure is temporarily down (see Handling Down Cells for more information). Contact your cloud provider.
+        - VERIFY_RESIZE: System is awaiting confirmation that the server is operational after a move or resize.
+      type: string
+      enum:
+        - "ACTIVE"
+        - "BUILD"
+        - "DELETED"
+        - "ERROR"
+        - "HARD_REBOOT"
+        - "MIGRATING"
+        - "PASSWORD"
+        - "PAUSED"
+        - "REBOOT"
+        - "REBUILD"
+        - "RESCUE"
+        - "RESIZE"
+        - "REVERT_RESIZE"
+        - "SHELVED"
+        - "SHELVED_OFFLOADED"
+        - "SHUTOFF"
+        - "SOFT_DELETED"
+        - "SUSPENDED"
+        - "UNKNOWN"
+        - "VERIFY_RESIZE"
+    state:
+      description: |
+        인스턴스 전원 상태
+        - 0: NOSTATE
+        - 1: RUNNING
+        - 3: PAUSED
+        - 4: SHUTDOWN
+        - 6: CRASHED
+        - 7: SUSPENDED
+      type: string
+      enum:
+        - "0"
+        - "1"
+        - "3"
+        - "4"
+        - "6"
+        - "7"
+    keypair:
+      $ref: 'schema.yaml#/ClusterKeyPair'
+    spec:
+      $ref: 'schema.yaml#/ClusterInstanceSpec'
+    networks:
+      description: 인스턴스의 네트워크 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterInstanceNetwork'
+    routers:
+      description: 인스턴스의 네트워크들과 연결된 라우터 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterRouter'
+    security_groups:
+      description: 인스턴스의 보안그룹 목록
+      type: array
+      items:
+        type: object
+        allOf: [ $ref: 'schema.yaml#/ClusterSecurityGroup' ]
+        properties:
+          rules:
+            description: 클러스터 보안그룹의 규칙 목록
+            type: array
+            items:
+              $ref: 'schema.yaml#/ClusterSecurityGroupRule'
+    volumes:
+      description: 인스턴스의 볼륨 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterInstanceVolume'
+
+ClusterInstanceVolume:
+  description: 클러스터 인스턴스의 볼륨
+  type: object
+  properties:
+    storage:
+      $ref: 'schema.yaml#/ClusterStorage'
+    volume:
+      $ref: 'schema.yaml#/ClusterVolume'
+    device_path:
+      description: 디바이스 경로
+      type: string
+    boot_index:
+      description: 부팅 순서
+      type: integer
+      format: int64
+
+ClusterKeyPair:
+  description: 클러스터 KeyPair
+  type: object
+  properties:
+    id:
+      description: KeyPair 의 ID
+      type: integer
+      format: uint64
+    name:
+      description: KeyPair 의 이름
+      type: string
+    fingerprint:
+      description: KeyPair 의 fingerprint
+      type: string
+    public_key:
+      description: KeyPair 의 public key
+      type: string
+    type_code:
+      description: KeyPair 의 타입
+      type: string
+      enum:
+        - "ssh"
+        - "x509"
+
+ClusterInstanceSpec:
+  description: 클러스터 인스턴스 Specification
+  type: object
+  properties:
+    id:
+      description: Specification 의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    uuid:
+      description: 클러스터에서의 Specification ID
+      type: string
+    name:
+      description: Specification 의 이름
+      type: string
+    description:
+      description: Specification 의 설명
+      type: string
+    vcpu_total_cnt:
+      description: VCPU 코어 수 (core)
+      type: integer
+      format: uint32
+    mem_total_bytes:
+      description: 메모리 용량 (bytes)
+      type: integer
+      format: uint64
+    disk_total_bytes:
+      description: 디스크 용량 (bytes)
+      type: integer
+      format: uint64
+    swap_total_bytes:
+      description: 스왑 영역 (bytes)
+      type: integer
+      format: uint64
+    ephemeral_total_bytes:
+      description: 임시 영역 (bytes)
+      type: integer
+      format: uint64
+    extra_specs:
+      description: Extra Specifications
+      type: array
+      items:
+        $ref: 'schema.yaml#/ClusterInstanceExtraSpec'
+
+ClusterInstanceExtraSpec:
+  description: 클러스터 인스턴스 Extra Specification
+  type: object
+  properties:
+    key:
+      description: |
+        Extra Specification 의 Key
+
+        **CPU limits:**
+        - quota:cpu_shares - Specifies the proportional weighted share for the domain. If this element is omitted, the service defaults to the OS provided defaults. There is no unit for the value; it is a relative measure based on the setting of other VMs. For example, a VM configured with value 2048 gets twice as much CPU time as a VM configured with value 1024.
+        - quota:cpu_shares_level - On VMware, specifies the allocation level. Can be custom, high, normal, or low. If you choose custom, set the number of shares using cpu_shares_share.
+        - quota:cpu_period - Specifies the enforcement interval (unit: microseconds) for QEMU and LXC hypervisors. Within a period, each VCPU of the domain is not allowed to consume more than the quota worth of runtime. The value should be in range [1000, 1000000]. A period with value 0 means no value.
+        - quota:cpu_limit - Specifies the upper limit for VMware machine CPU allocation in MHz. This parameter ensures that a machine never uses more than the defined amount of CPU time. It can be used to enforce a limit on the machine's CPU performance.
+        - quota:cpu_reservation - Specifies the guaranteed minimum CPU reservation in MHz for VMware. This means that if needed, the machine will definitely get allocated the reserved amount of CPU cycles.
+        - quota:cpu_quota - Specifies the maximum allowed bandwidth (unit: microseconds). A domain with a negative-value quota indicates that the domain has infinite bandwidth, which means that it is not bandwidth controlled. The value should be in range [1000, 18446744073709551] or less than 0. A quota with value 0 means no value. You can use this feature to ensure that all vCPUs run at the same speed.
+
+        **Memory limits:**
+        - quota:memory_limit - Specifies the upper limit for VMware machine memory allocation in MB. The utilization of a virtual machine will not exceed this limit, even if there are available resources. This is typically used to ensure a consistent performance of virtual machines independent of available resources.
+        - quota:memory_reservation - Specifies the guaranteed minimum memory reservation in MB for VMware. This means the specified amount of memory will definitely be allocated to the machine.
+        - quota:memory_shares_level - On VMware, specifies the allocation level. This can be custom, high, normal or low. If you choose custom, set the number of shares using memory_shares_share.
+        - quota:memory_shares_share - Specifies the number of shares allocated in the event that custom is used. There is no unit for this value. It is a relative measure based on the settings for other VMs.
+
+        **Disk I/O limits:**
+        - quota:disk_io_limit - Specifies the upper limit for disk utilization in I/O per second. The utilization of a virtual machine will not exceed this limit, even if there are available resources. The default value is -1 which indicates unlimited usage.
+        - quota:disk_io_reservation - Specifies the guaranteed minimum disk allocation in terms of Input/output Operations Per Second (IOPS).
+        - quota:disk_io_shares_level - Specifies the allocation level. This can be custom, high, normal or low. If you choose custom, set the number of shares using disk_io_shares_share.
+        - quota:disk_io_shares_share - Specifies the number of shares allocated in the event that custom is used. When there is resource contention, this value is used to determine the resource allocation.
+
+        **Disk tuning:**
+        - quota:disk_read_bytes_sec
+        - quota:disk_read_iops_sec
+        - quota:disk_write_bytes_sec
+        - quota:disk_write_iops_sec
+        - quota:disk_total_bytes_sec
+        - quota:disk_total_iops_sec
+
+        **Bandwidth I/O:**
+        - quota:vif_inbound_average
+        - quota:vif_inbound_burst
+        - quota:vif_inbound_peak
+        - quota:vif_outbound_average
+        - quota:vif_outbound_burst
+        - quota:vif_outbound_peak
+
+        **Watchdog behavior:**
+        - hw:watchdog_action
+
+        **Random-number generator:**
+        - hw_rng:rate-allowed
+        - hw_rng:rate_bytes
+        - hw_rng:rate_period
+
+        **CPU topology:**
+        - hw:cpu_sockets
+        - hw:cpu_cores
+        - hw:cpu_threads
+        - hw:cpu_max_sockets
+        - hw:cpu_max_cores
+        - hw:cpu_max_threads
+
+        **CPU pinning policy:**
+        - hw:cpu_policy
+        - hw:cpu_thread_policy
+
+        **NUMA topology:**
+        - hw:numa_nodes
+        - hw:numa_cpus.N
+        - hw:numa_mem.N
+
+        **Large pages allocation:**
+        - hw:mem_page_size
+
+        **PCI passthrough:**
+        - pci_passthrough:alias
+
+        **Secure Boot:**
+        - os:secure_boot
+      type: string
+      enum:
+        - "quota:cpu_shares"
+        - "quota:cpu_shares_level"
+        - "quota:cpu_period"
+        - "quota:cpu_limit"
+        - "quota:cpu_reservation"
+        - "quota:cpu_quota"
+        - "quota:memory_limit"
+        - "quota:memory_reservation"
+        - "quota:memory_shares_level"
+        - "quota:memory_shares_share"
+        - "quota:disk_io_limit"
+        - "quota:disk_io_reservation"
+        - "quota:disk_io_shares_level"
+        - "quota:disk_io_shares_share"
+        - "quota:disk_read_bytes_sec"
+        - "quota:disk_read_iops_sec"
+        - "quota:disk_write_bytes_sec"
+        - "quota:disk_write_iops_sec"
+        - "quota:disk_total_bytes_sec"
+        - "quota:disk_total_iops_sec"
+        - "quota:vif_inbound_average"
+        - "quota:vif_inbound_burst"
+        - "quota:vif_inbound_peak"
+        - "quota:vif_outbound_average"
+        - "quota:vif_outbound_burst"
+        - "quota:vif_outbound_peak"
+        - "hw:watchdog_action"
+        - "hw_rng:rate-allowed"
+        - "hw_rng:rate_bytes"
+        - "hw_rng:rate_period"
+        - "hw:cpu_sockets"
+        - "hw:cpu_cores"
+        - "hw:cpu_threads"
+        - "hw:cpu_max_sockets"
+        - "hw:cpu_max_cores"
+        - "hw:cpu_max_threads"
+        - "hw:cpu_policy"
+        - "hw:cpu_thread_policy"
+        - "hw:numa_nodes"
+        - "hw:numa_cpus.N"
+        - "hw:numa_mem.N"
+        - "hw:mem_page_size"
+        - "pci_passthrough:alias"
+        - "os:secure_boot"
+    value:
+      description: Extra Specification 의 Value
+      type: string
+
+ClusterInstanceNetwork:
+  description: 클러스터 인스턴스의 네트워크
+  type: object
+  properties:
+    id:
+      description: 인스턴스 네트워크의 ID
+      type: integer
+      format: uint64
+    network:
+      $ref: 'schema.yaml#/ClusterNetwork'
+    subnet:
+      $ref: 'schema.yaml#/ClusterSubnet'
+    floating_ip:
+      $ref: 'schema.yaml#/ClusterFloatingIP'
+    dhcp_flag:
+      description: DHCP 여부
+      type: boolean
+    ip_address:
+      description: IP 주소
+      type: string
+
+ClusterFloatingIP:
+  description: 클러스터 Floating IP
+  type: object
+  properties:
+    id:
+      description: 클러스터 Floating IP 의 ID
+      type: integer
+      format: uint64
+    uuid:
+      description: 클러스터에서의 Floating IP ID
+      type: string
+    description:
+      description: 클러스터 Floating IP 의 설명
+      type: string
+    ip_address:
+      description: IP 주소
+      type: string
+    status:
+      description: 상태
+      type: string
+      enum:
+        - "ACTIVE"
+        - "DOWN"
+        - "ERROR"
+
+ClusterSecurityGroup:
+  description: 클러스터 보안그룹
+  type: object
+  properties:
+    id:
+      description: 클러스터 보안그룹의 ID
+      type: integer
+      format: uint64
+    cluster:
+      $ref: 'schema.yaml#/Cluster'
+    tenant:
+      $ref: 'schema.yaml#/ClusterTenant'
+    uuid:
+      description: 클러스터에서의 보안그룹 ID
+      type: string
+    name:
+      description: 클러스터 보안그룹의 이름
+      type: string
+    description:
+      description: 클러스터 보안그룹의 설명
+      type: string
+
+ClusterSecurityGroupRule:
+  description: 클러스터 보안그룹 규칙
+  type: object
+  properties:
+    id:
+      description: 클러스터 보안그룹 규칙의 ID
+      type: integer
+      format: uint64
+    remote_security_group:
+      $ref: 'schema.yaml#/ClusterSecurityGroup'
+    uuid:
+      description: 클러스터에서의 보안그룹 규칙 ID
+      type: string
+    description:
+      description: 클러스터 보안그룹 규칙의 설명
+      type: string
+    ether_type:
+      description: 이더넷 타입
+      type: uint32
+      enum:
+        - 4
+        - 6
+    network_cidr:
+      description: 네트워크 CIDR
+      type: string
+    direction:
+      description: 규칙 방향
+      type: string
+      enum:
+        - "ingress"
+        - "egress"
+    port_range_max:
+      description: 포트 범위 최대 값
+      type: integer
+      format: uint32
+    port_range_min:
+      description: 포트 범위 최소 값
+      type: integer
+      format: uint32
+    protocol:
+      description: |
+        프로토콜
+
+        The IP protocol can be represented by a string, an integer, or null. Valid string or integer values are any or 0, ah or 51, dccp or 33, egp or 8, esp or 50, gre or 47, icmp or 1, icmpv6 or 58, igmp or 2, ipip or 4, ipv6-encap or 41, ipv6-frag or 44, ipv6-icmp or 58, ipv6-nonxt or 59, ipv6-opts or 60, ipv6-route or 43, ospf or 89, pgm or 113, rsvp or 46, sctp or 132, tcp or 6, udp or 17, udplite or 136, vrrp or 112. Additionally, any integer value between [0-255] is also valid. The string any (or integer 0) means all IP protocols. See the constants in neutron_lib.constants for the most up-to-date list of supported strings.
+      type: string
+
+Compute:
+  description: 클러스터 Compute 정보
+  type: object
+  properties:
+    binary:
+      description: compute 이름
+      type: string
+    host:
+      description: compute 호스트
+      type: string
+    zone:
+      description: compute zone
+      type: string
+    status:
+      description: compute 상태
+      type: string
+    last_updated:
+      description: compute 마지막 업데이트된 시간
+      type: string
+    exception:
+      description: compute 상태 제외 여부
+      type: bool
+
+Storage:
+  description: 클러스터 Storage 정보
+  type: object
+  properties:
+    binary:
+      description: storage 이름
+      type: string
+    backend_name:
+      description: storage 호스트
+      type: string
+    host:
+      description: storage 호스트
+      type: string
+    zone:
+      description: storage zone
+      type: string
+    status:
+      description: storage 상태
+      type: string
+    last_updated:
+      description: storage 마지막 업데이트된 시간
+      type: string
+    exception:
+      description: storage 상태 제외 여부
+      type: bool
+
+Network:
+  description: 클러스터 Network 정보
+  type: object
+  properties:
+    type:
+      description: network agent type
+      type: string
+    binary:
+      description: network agent 이름
+      type: string
+    host:
+      description: network agent 호스트
+      type: string
+    status:
+      description: network agent 상태
+      type: string
+    last_updated:
+      description: network 마지막 업데이트된 시간
+      type: string
+    exception:
+      description: network 상태 제외 여부
+      type: bool
+
+CheckCluster:
+  description: 클러스터 상태정보
+  type: object
+  properties:
+    storage:
+      description: 클러스터 storage 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Storage'
+    compute:
+      description: 클러스터 compute 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Compute'
+    network:
+      description: 클러스터 network 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Network'
+    status:
+      description: 클러스터 storage, compute, network 종합 상태
+      type: string
+      enum:
+        - "cluster.state.active"
+        - "cluster.state.inactive"
+        - "cluster.state.warning"
+    updated_at:
+      description: 클러스터 storage, compute, network 종합 상태
+      type: string
+    compute_error:
+      description: 클러스터 compute 가 nil 값을 반환할때 발생한 에러
+      type: string
+    storage_error:
+      description: 클러스터 storage 가 nil 값을 반환할때 발생한 에러
+      type: string
+    network_error:
+      description: 클러스터 network 가 nil 값을 반환할때 발생한 에러
+      type: string
+
+ClusterConfig:
+  description: 클러스터 Config 정보
+  type: object
+  properties:
+    timestamp_interval:
+      description: Health Check Interval
+      type: integer
+      format: int64
+      minimum: 1
+      maximum: 10
+    reserved_sync_interval:
+      description: Reserved Sync Interval
+      type: integer
+      format: int64
+      minimum: 1
+      maximum: 3
+
+Exception:
+  description: 클러스터 동기화 후 상태 결과 예외 대상
+  type: object
+  properties:
+    storage:
+      description: 클러스터 storage 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Storage'
+    compute:
+      description: 클러스터 compute 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Compute'
+    network:
+      description: 클러스터 network 정보
+      type: array
+      items:
+        $ref: 'schema.yaml#/Network'
+
+Completion:
+  description: 클러스터 동기화 진행된 기능 목록
+  type: object
+  properties:
+    resource:
+      description: 동기화 진행할 기능 이름
+      type: string
+    progress_status:
+      description: 동기화 진행 상태
+      type: string
+      enum:
+        - "waiting"
+        - "running"
+        - "completed"
+
+SyncClusterStatus:
+  description: 클러스터 동기화 상태 정보
+  type: object
+  properties:
+    id:
+      description: 클러스터 ID
+      type: integer
+      format: uint64
+    status:
+      description: 클러스터 동기화 상태
+      type: string
+      enum:
+        - "cluster.sync.state.init"
+        - "cluster.sync.state.running"
+        - "cluster.sync.state.done"
+        - "cluster.sync.state.failed"
+        - "cluster.sync.state.unknown"
+    progress:
+      description: 클러스터 동기화 진행도
+      type: integer
+      format: int64
+    completion:
+      description: 클러스터 동기화 진행된 기능 목록
+      type: array
+      items:
+        $ref: 'schema.yaml#/Completion'

@@ -1,0 +1,79 @@
+openapi: "3.0.0"
+info:
+  version: v1
+  title: CDM-Center
+  description: 설명추가
+
+tags:
+  - name: "Cluster Management"
+    description: 클러스터 관리
+
+paths:
+  /management/clusters/pbkey:
+    $ref: 'cluster.yaml#/PublicKey'
+  /management/clusters/check:
+    $ref: 'cluster.yaml#/Check'
+  /management/clusters:
+    $ref: 'cluster.yaml#/Resource'
+  /management/clusters/{cluster_id}:
+    $ref: 'cluster.yaml#/Object'
+  /management/clusters/{cluster_id}/config:
+    $ref: 'cluster.yaml#/Config'
+  /management/clusters/{cluster_id}/check:
+    $ref: 'cluster.yaml#/CheckStatus'
+  /management/clusters/{cluster_id}/sync:
+    $ref: 'cluster.yaml#/Sync'
+  /management/clusters/{cluster_id}/sync_status:
+    $ref: 'cluster.yaml#/SyncStatus'
+  /management/clusters/{cluster_id}/sync_exception:
+    $ref: 'cluster.yaml#/SyncException'
+  /management/clusters/{cluster_id}/credential:
+    $ref: 'cluster.yaml#/Credential'
+  /management/clusters/{cluster_id}/hypervisors:
+    $ref: 'hypervisor.yaml#/Resource'
+  /management/clusters/{cluster_id}/hypervisors/{cluster_hypervisor_id}:
+    $ref: 'hypervisor.yaml#/Object'
+  /management/clusters/{cluster_id}/availability-zones:
+    $ref: 'availability-zone.yaml#/Resource'
+  /management/clusters/{cluster_id}/availability-zones/{cluster_availability_zone_id}:
+    $ref: 'availability-zone.yaml#/Object'
+  /management/clusters/{cluster_id}/tenants:
+    $ref: 'tenant.yaml#/Resource'
+  /management/clusters/{cluster_id}/tenants/{cluster_tenant_id}:
+    $ref: 'tenant.yaml#/Object'
+  /management/clusters/{cluster_id}/networks:
+    $ref: 'network.yaml#/Resource'
+  /management/clusters/{cluster_id}/networks/{cluster_network_id}:
+    $ref: 'network.yaml#/Object'
+  /management/clusters/{cluster_id}/subnets/{cluster_subnet_id}:
+    $ref: 'network.yaml#/Subnet'
+  /management/clusters/{cluster_id}/floating-ips/{cluster_floating_ip_id}:
+    $ref: 'network.yaml#/FloatingIP'
+  /management/clusters/{cluster_id}/routers:
+    $ref: 'router.yaml#/Resource'
+  /management/clusters/{cluster_id}/routers/{cluster_router_id}:
+    $ref: 'router.yaml#/Object'
+  /management/clusters/{cluster_id}/instances:
+    $ref: 'instance.yaml#/Resource'
+  /management/clusters/{cluster_id}/instances/{cluster_instance_id}:
+    $ref: 'instance.yaml#/Object'
+  /management/clusters/{cluster_id}/keypairs/{cluster_keypair_id}:
+    $ref: 'instance.yaml#/KeyPair'
+  /management/clusters/{cluster_id}/user-scripts/{cluster_instance_id}:
+    $ref: 'instance.yaml#/UserScript'
+  /management/clusters/{cluster_id}/instance-specs:
+    $ref: 'instance-spec.yaml#/Resource'
+  /management/clusters/{cluster_id}/instance-specs/{cluster_instance_spec_id}:
+    $ref: 'instance-spec.yaml#/Object'
+  /management/clusters/{cluster_id}/security-groups:
+    $ref: 'security-groups.yaml#/Resource'
+  /management/clusters/{cluster_id}/security-groups/{cluster_security_group_id}:
+    $ref: 'security-groups.yaml#/Object'
+  /management/clusters/{cluster_id}/volumes:
+    $ref: 'volume.yaml#/Resource'
+  /management/clusters/{cluster_id}/volumes/{cluster_volume_id}:
+    $ref: 'volume.yaml#/Object'
+  /management/clusters/{cluster_id}/storages:
+    $ref: 'storage.yaml#/Resource'
+  /management/clusters/{cluster_id}/storages/{cluster_storage_id}:
+    $ref: 'storage.yaml#/Object'

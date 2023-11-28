@@ -1,0 +1,23 @@
+Pagination:
+  Limit:
+    in: query
+    name: limit
+    description: 한 페이지에 표시할 항목 개수
+    schema:
+      type: integer
+      format: uint64
+
+  Offset:
+    in: query
+    name: offset
+    description: 페이지에 표시할 항목 인덱스
+    schema:
+      type: integer
+      format: uint64
+
+Sync:
+  in: query
+  name: sync
+  description: 오픈스택 정보 동기화
+  schema:
+    type: boolean

@@ -1,0 +1,252 @@
+Resource:
+  get:
+    summary: 클러스터 Hypervisor 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01111
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/Hostname'
+      - $ref: '#/components/parameters/IPAddress'
+      - $ref: '#/components/parameters/AvailabilityZoneID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Hypervisors'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 Hypervisor 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01121
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/HypervisorID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/Hypervisor'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+  put:
+    summary: 클러스터 Hypervisor 추가정보 수정
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01131
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/HypervisorID'
+    requestBody:
+      $ref: '#/components/requestBodies/Hypervisor'
+    responses:
+      200:
+        $ref: '#/components/responses/Hypervisor'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    HypervisorID:
+      in: path
+      name: cluster_hypervisor_id
+      description: 클러스터 Hypervisor ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    Hostname:
+      in: query
+      name: hostname
+      description: 클러스터 Hypervisor 호스트네임
+      schema:
+        type: string
+
+    IPAddress:
+      in: query
+      name: ip_address
+      description: 클러스터 Hypervisor IP 주소
+      schema:
+        type: string
+
+    AvailabilityZoneID:
+      in: query
+      name: cluster_availability_zone_id
+      description: 클러스터 가용구역 ID
+      schema:
+        type: integer
+        format: uint64
+
+  requestBodies:
+    Hypervisor:
+      content:
+        application/json:
+          schema:
+            description: Hypervisor 추가정보
+            type: object
+            properties:
+              hypervisor:
+                $ref: 'schema.yaml#/ClusterHypervisor'
+          example: {
+            hypervisor: {
+              id: 1, ssh_port: 22,
+              ssh_account: "root", ssh_password: "password",
+              agent_port: 6000,
+              agent_version: "v1.0.0",
+              agent_installed_at: 1626669606,
+              agent_last_upgraded_at: 1626669606
+            }
+          }
+
+  responses:
+    Hypervisors:
+      description: 클러스터 Hypervisor 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              hypervisors:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterHypervisor'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            hypervisors: [
+              {
+                id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", type_code: "openstack.hypervisor.type.kvm", hostname: "localhost", ip_address: "1.1.1.1",
+                vcpu_total_cnt: 32, vcpu_used_cnt: 16,
+                mem_total_bytes: 4295000000, mem_used_bytes: 429500000,
+                disk_total_bytes: 4295000000, disk_used_bytes: 429500000,
+                status: "enabled", state: "up",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                availability_zone: {
+                  id: 1, name: "nova", available: true
+                }
+              },
+              {
+                id: 2, uuid: "df4bb140-7e71-4435-8f75-ea301d8f8ce5", type_code: "openstack.hypervisor.type.kvm", hostname: "localhost", ip_address: "1.1.1.2",
+                vcpu_total_cnt: 32, vcpu_used_cnt: 16,
+                mem_total_bytes: 4295000000, mem_used_bytes: 429500000,
+                disk_total_bytes: 4295000000, disk_used_bytes: 429500000,
+                status: "enabled", state: "up",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                availability_zone: {
+                  id: 1, name: "nova", available: true
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    Hypervisor:
+      description: 클러스터 Hypervisor 의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              hypervisor:
+                $ref: 'schema.yaml#/ClusterHypervisor'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            hypervisor: {
+              id: 1, uuid: "1d85c371-8fc1-4b8e-9d14-c1f6839f0888", type_code: "openstack.hypervisor.type.kvm", hostname: "localhost", ip_address: "1.1.1.1",
+              vcpu_total_cnt: 32, vcpu_used_cnt: 16,
+              mem_total_bytes: 4295000000, mem_used_bytes: 429500000,
+              disk_total_bytes: 4295000000, disk_used_bytes: 429500000,
+              status: "enabled", state: "up",
+              ssh_port: 22, ssh_account: "root", ssh_password: "password",
+              agent_port: 10000, agent_version: "1.0.0",
+              agent_installed_at: 1611306068, agent_last_upgraded_at: 1611306068,
+              cluster: {
+                id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                type_code: "cluster.type.openstack",
+                remarks: "대전센터 OpenStack #001"
+              },
+              availability_zone: {
+                id: 1, name: "nova", available: true
+              }
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }

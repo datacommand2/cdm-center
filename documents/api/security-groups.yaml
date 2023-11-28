@@ -1,0 +1,210 @@
+Resource:
+  get:
+    summary: 클러스터 보안그룹 목록 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01911
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: 'parameter.yaml#/Pagination/Limit'
+      - $ref: 'parameter.yaml#/Pagination/Offset'
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/TenantID'
+      - $ref: '#/components/parameters/InstanceID'
+      - $ref: '#/components/parameters/UUID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/SecurityGroups'
+      204:
+        description: No Contents
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+Object:
+  get:
+    summary: 클러스터 보안그룹 조회
+    description: 설명추가
+    externalDocs:
+      url: http://10.1.1.220/cdm/cdm-center/documents/-/blob/master/functions.md#fc-cm-01921
+    tags:
+      - "Cluster Management"
+    parameters:
+      - $ref: '#/components/parameters/ClusterID'
+      - $ref: '#/components/parameters/SecurityGroupID'
+      - $ref: 'parameter.yaml#/Sync'
+    responses:
+      200:
+        $ref: '#/components/responses/SecurityGroup'
+      400:
+        description: Bad Request
+      401:
+        description: Unauthenticated
+      403:
+        description: Unauthorized
+      404:
+        description: Not Found
+      500:
+        description: Internal Server Error
+      501:
+        description: Not Implemented
+      503:
+        description: Service Unavailable
+
+components:
+  parameters:
+    ClusterID:
+      in: path
+      name: cluster_id
+      description: 클러스터 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    SecurityGroupID:
+      in: path
+      name: cluster_security_group_id
+      description: 클러스터 보안그룹 ID
+      required: true
+      schema:
+        type: integer
+        format: uint64
+
+    InstanceID:
+      in: query
+      name: cluster_instance_id
+      description: 클러스터 인스턴스 ID
+      schema:
+        type: integer
+        format: uint64
+
+    TenantID:
+      in: query
+      name: cluster_tenant_id
+      description: 클러스터 테넌트 ID
+      schema:
+        type: integer
+        format: uint64
+
+    UUID:
+      in: query
+      name: uuid
+      description: 클러스터에서의 보안그룹 ID
+      schema:
+        type: string
+
+  responses:
+    SecurityGroups:
+      description: 클러스터 보안그룹 목록을 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              security_groups:
+                type: array
+                items:
+                  $ref: 'schema.yaml#/ClusterSecurityGroup'
+              pagination:
+                $ref: 'schema.yaml#/Pagination'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            security_groups: [
+              {
+                id: 1, uuid: "22bdae7c-8d34-4f40-b79a-b3e379ff27dc",
+                name: "security group #1", description: "security group description",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                }
+              },
+              {
+                id: 2, uuid: "e9afc8d2-819a-4d31-b5f3-e141226fb443",
+                name: "security group #2", description: "security group description",
+                cluster: {
+                  id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                  type_code: "cluster.type.openstack",
+                  remarks: "대전센터 OpenStack #001"
+                },
+                tenant: {
+                  id: 1, name: "admin", enabled: true,
+                  uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+                }
+              }
+            ],
+            pagination: {
+              page: 1,
+              total_page: 10,
+              total_items: 100
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
+
+    SecurityGroup:
+      description: 클러스터 보안그룹의 상세정보를 반환한다.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              security_group:
+                type: object
+                allOf: [$ref: 'schema.yaml#/ClusterSecurityGroup']
+                properties:
+                  rules:
+                    $ref: 'schema.yaml#/ClusterSecurityGroupRule'
+              message:
+                $ref: 'schema.yaml#/Message'
+          example: {
+            security_group: {
+               id: 1, uuid: "22bdae7c-8d34-4f40-b79a-b3e379ff27dc",
+               name: "security group #1", description: "security group description",
+               cluster: {
+                 id: 1, name: "대전센터 OpenStack #001", state_code: "cluster.state.active",
+                 type_code: "cluster.type.openstack",
+                 remarks: "대전센터 OpenStack #001"
+               },
+               tenant: {
+                 id: 1, name: "admin", enabled: true,
+                 uuid: "04868583-dcb7-4a01-b0f8-2951b6243c25"
+               },
+               rules: [
+                 {
+                   id: 1, uuid: "68a31847-9bb4-46f6-9b21-5e38a9f75079",
+                   direction: "ingress", description: "security group rule description",
+                   ether_type: 4, network_cidr: "0.0.0.0/0", port_range_max: 80, port_range_min: 80, protocol: "tcp",
+                   remote_security_group: {
+                     id: 2, uuid: "a406c6bd-afd2-4c8a-8b6e-fe104038056e",
+                     name: "security group #2", description: "security group description"
+                   }
+                 }
+               ]
+            },
+            message: {
+              code: "message code",
+              contents: "message contents"
+            }
+          }
