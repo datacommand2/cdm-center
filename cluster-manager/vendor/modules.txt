@@ -1,6 +1,6 @@
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
-# github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
+# github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 ## explicit
 github.com/asaskevich/govalidator
 # github.com/bitly/go-simplejson v0.5.0
@@ -53,11 +53,17 @@ github.com/datacommand2/cdm-cloud/common/util
 # github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231127061639-e680b139acd3
 ## explicit
 github.com/datacommand2/cdm-cloud/services/identity/proto
-# github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231127064704-ec552445103d
+# github.com/datacommand2/cdm-cloud/services/scheduler v0.0.0-20231116073359-755996e851e1
+github.com/datacommand2/cdm-cloud/services/scheduler/proto
+# github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231127071405-33c955c2dcbd
 ## explicit
 github.com/datacommand2/cdm-disaster-recovery/common/constant
+github.com/datacommand2/cdm-disaster-recovery/common/database/model
 github.com/datacommand2/cdm-disaster-recovery/common/migrator
 github.com/datacommand2/cdm-disaster-recovery/common/mirror
+# github.com/datacommand2/cdm-disaster-recovery/manager v0.0.0-20231128001023-78919424bb16
+## explicit
+github.com/datacommand2/cdm-disaster-recovery/manager/proto
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible
@@ -133,7 +139,7 @@ github.com/go-sql-driver/mysql
 github.com/gogo/protobuf/gogoproto
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/protoc-gen-gogo/descriptor
-# github.com/golang/protobuf v1.5.2
+# github.com/golang/protobuf v1.5.3
 ## explicit
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
@@ -142,7 +148,7 @@ github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/protobuf/ptypes/wrappers
-# github.com/google/uuid v1.3.0
+# github.com/google/uuid v1.4.0
 ## explicit
 github.com/google/uuid
 # github.com/hashicorp/hcl v1.0.0
@@ -165,7 +171,7 @@ github.com/hpcloud/tail/winfile
 github.com/imdario/mergo
 # github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
 github.com/jbenet/go-context/io
-# github.com/jinzhu/copier v0.3.4
+# github.com/jinzhu/copier v0.4.0
 ## explicit
 github.com/jinzhu/copier
 # github.com/jinzhu/gorm v1.9.16
@@ -354,21 +360,21 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.0.0-20200510223506-06a226fb4e37
+# golang.org/x/crypto v0.14.0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/curve25519
+golang.org/x/crypto/curve25519/internal/field
 golang.org/x/crypto/ed25519
-golang.org/x/crypto/ed25519/internal/edwards25519
-golang.org/x/crypto/internal/subtle
+golang.org/x/crypto/internal/alias
+golang.org/x/crypto/internal/poly1305
 golang.org/x/crypto/openpgp
 golang.org/x/crypto/openpgp/armor
 golang.org/x/crypto/openpgp/elgamal
 golang.org/x/crypto/openpgp/errors
 golang.org/x/crypto/openpgp/packet
 golang.org/x/crypto/openpgp/s2k
-golang.org/x/crypto/poly1305
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/agent
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
@@ -376,9 +382,9 @@ golang.org/x/crypto/ssh/knownhosts
 # golang.org/x/lint v0.0.0-20210508222113-6edffad5e616
 golang.org/x/lint
 golang.org/x/lint/golint
-# golang.org/x/mod v0.4.2
+# golang.org/x/mod v0.10.0
 golang.org/x/mod/semver
-# golang.org/x/net v0.0.0-20210525063256-abc453219eb5
+# golang.org/x/net v0.17.0
 ## explicit
 golang.org/x/net/bpf
 golang.org/x/net/context
@@ -396,46 +402,49 @@ golang.org/x/net/ipv6
 golang.org/x/net/netutil
 golang.org/x/net/proxy
 golang.org/x/net/trace
-# golang.org/x/sys v0.0.0-20210510120138-977fb7262007
+# golang.org/x/sys v0.13.0
 golang.org/x/sys/cpu
 golang.org/x/sys/execabs
-golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.6
+# golang.org/x/text v0.13.0
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# golang.org/x/tools v0.1.2
+# golang.org/x/tools v0.9.1
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/passes/inspect
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/ast/inspector
 golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/gcexportdata
-golang.org/x/tools/go/internal/gcimporter
+golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/loader
 golang.org/x/tools/go/packages
 golang.org/x/tools/go/types/objectpath
 golang.org/x/tools/go/types/typeutil
-golang.org/x/tools/internal/analysisinternal
 golang.org/x/tools/internal/event
 golang.org/x/tools/internal/event/core
 golang.org/x/tools/internal/event/keys
 golang.org/x/tools/internal/event/label
+golang.org/x/tools/internal/gcimporter
 golang.org/x/tools/internal/gocommand
-golang.org/x/tools/internal/lsp/fuzzy
 golang.org/x/tools/internal/packagesinternal
+golang.org/x/tools/internal/pkgbits
+golang.org/x/tools/internal/tokeninternal
+golang.org/x/tools/internal/typeparams
 golang.org/x/tools/internal/typesinternal
-# golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
-golang.org/x/xerrors
-golang.org/x/xerrors/internal
-# google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
+# google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405
+google.golang.org/genproto/internal
+# google.golang.org/genproto/googleapis/api v0.0.0-20231106174013-bbf56f31fb17
 ## explicit
+google.golang.org/genproto/googleapis/api
 google.golang.org/genproto/googleapis/api/annotations
+# google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.44.0 => google.golang.org/grpc v1.26.0
+# google.golang.org/grpc v1.59.0 => google.golang.org/grpc v1.26.0
 google.golang.org/grpc
 google.golang.org/grpc/attributes
 google.golang.org/grpc/backoff
@@ -474,7 +483,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.28.1
+# google.golang.org/protobuf v1.31.0
 ## explicit
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
@@ -517,30 +526,37 @@ gopkg.in/tomb.v1
 gopkg.in/warnings.v0
 # gopkg.in/yaml.v2 v2.2.4
 gopkg.in/yaml.v2
-# honnef.co/go/tools v0.0.1-2019.2.3
-honnef.co/go/tools/arg
+# honnef.co/go/tools v0.1.3
+honnef.co/go/tools/analysis/code
+honnef.co/go/tools/analysis/edit
+honnef.co/go/tools/analysis/facts
+honnef.co/go/tools/analysis/facts/nilness
+honnef.co/go/tools/analysis/facts/typedness
+honnef.co/go/tools/analysis/lint
+honnef.co/go/tools/analysis/report
 honnef.co/go/tools/cmd/staticcheck
 honnef.co/go/tools/config
-honnef.co/go/tools/deprecated
-honnef.co/go/tools/facts
-honnef.co/go/tools/functions
+honnef.co/go/tools/go/ast/astutil
+honnef.co/go/tools/go/ir
+honnef.co/go/tools/go/ir/irutil
+honnef.co/go/tools/go/loader
 honnef.co/go/tools/go/types/typeutil
 honnef.co/go/tools/internal/cache
-honnef.co/go/tools/internal/passes/buildssa
+honnef.co/go/tools/internal/go/gcimporter
+honnef.co/go/tools/internal/passes/buildir
 honnef.co/go/tools/internal/renameio
+honnef.co/go/tools/internal/robustio
 honnef.co/go/tools/internal/sharedcheck
-honnef.co/go/tools/lint
-honnef.co/go/tools/lint/lintdsl
-honnef.co/go/tools/lint/lintutil
-honnef.co/go/tools/lint/lintutil/format
-honnef.co/go/tools/loader
+honnef.co/go/tools/internal/sync
+honnef.co/go/tools/knowledge
+honnef.co/go/tools/lintcmd
+honnef.co/go/tools/lintcmd/runner
+honnef.co/go/tools/lintcmd/version
+honnef.co/go/tools/pattern
 honnef.co/go/tools/printf
 honnef.co/go/tools/simple
-honnef.co/go/tools/ssa
-honnef.co/go/tools/ssautil
 honnef.co/go/tools/staticcheck
-honnef.co/go/tools/staticcheck/vrp
 honnef.co/go/tools/stylecheck
 honnef.co/go/tools/unused
-honnef.co/go/tools/version
+honnef.co/go/tools/unused/typemap
 # google.golang.org/grpc => google.golang.org/grpc v1.26.0

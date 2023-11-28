@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	cms "github.com/datacommand2/cdm-center/cluster-manager/proto"
 	"github.com/datacommand2/cdm-cloud/common/broker"
 	"github.com/datacommand2/cdm-cloud/common/errors"
 	"github.com/datacommand2/cdm-cloud/common/logger"
@@ -50,14 +51,14 @@ const (
 
 // RecoveryJob 특정 job 의 정보
 type RecoveryJob struct {
-	RecoveryJobID     uint64 `json:"recovery_job_id,omitempty"`
-	RecoveryJobHash   string `json:"recovery_job_hash,omitempty"`
-	ProtectionGroupID uint64 `json:"protection_group_id,omitempty"`
-	//ProtectionCluster     *cms.Cluster                  `json:"protection_cluster,omitempty"`
-	//RecoveryCluster       *cms.Cluster                  `json:"recovery_cluster,omitempty"`
-	RecoveryJobTypeCode   string `json:"recovery_job_type_code,omitempty"`
-	RecoveryTimeObjective uint32 `json:"recovery_time_objective,omitempty"`
-	RecoveryPointTypeCode string `json:"recovery_point_type_code,omitempty"`
+	RecoveryJobID         uint64       `json:"recovery_job_id,omitempty"`
+	RecoveryJobHash       string       `json:"recovery_job_hash,omitempty"`
+	ProtectionGroupID     uint64       `json:"protection_group_id,omitempty"`
+	ProtectionCluster     *cms.Cluster `json:"protection_cluster,omitempty"`
+	RecoveryCluster       *cms.Cluster `json:"recovery_cluster,omitempty"`
+	RecoveryJobTypeCode   string       `json:"recovery_job_type_code,omitempty"`
+	RecoveryTimeObjective uint32       `json:"recovery_time_objective,omitempty"`
+	RecoveryPointTypeCode string       `json:"recovery_point_type_code,omitempty"`
 	//RecoveryPointSnapshot *drms.ProtectionGroupSnapshot `json:"recovery_point_snapshot,omitempty"`
 	RecoveryPoint    int64          `json:"recovery_point,omitempty"`
 	TriggeredAt      int64          `json:"triggered_at,omitempty"`
