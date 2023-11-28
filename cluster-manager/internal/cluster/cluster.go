@@ -15,7 +15,8 @@ import (
 	"github.com/datacommand2/cdm-cloud/common/metadata"
 	drConstant "github.com/datacommand2/cdm-disaster-recovery/common/constant"
 	"github.com/datacommand2/cdm-disaster-recovery/common/migrator"
-	//drms "github.com/datacommand2/cdm-disaster-recovery/services/manager/proto"
+	drms "github.com/datacommand2/cdm-disaster-recovery/manager/proto"
+	"github.com/micro/go-micro/v2/client/grpc"
 
 	"context"
 	"fmt"
@@ -922,12 +923,12 @@ func Delete(ctx context.Context, req *cms.DeleteClusterRequest) error {
 		return errors.UnauthorizedRequest(ctx)
 	}
 
-	//cli := drms.NewDisasterRecoveryManagerService(drConstant.ServiceManagerName, grpc.NewClient())
-	//_, err = cli.CheckDeletableCluster(ctx, &drms.CheckDeletableClusterRequest{ClusterId: c.ID})
-	//if err != nil {
-	//	logger.Errorf("[Cluster-Delete] Errors occurred during checking deletable status of the cluster(%d). Cause:%+v", req.ClusterId, err)
-	//	return errors.IPCFailed(err)
-	//}
+	cli := drms.NewDisasterRecoveryManagerService(drConstant.ServiceManagerName, grpc.NewClient())
+	_, err = cli.CheckDeletableCluster(ctx, &drms.CheckDeletableClusterRequest{ClusterId: c.ID})
+	if err != nil {
+		logger.Errorf("[Cluster-Delete] Errors occurred during checking deletable status of the cluster(%d). Cause:%+v", req.ClusterId, err)
+		return errors.IPCFailed(err)
+	}
 
 	if err = database.GormTransaction(func(db *gorm.DB) error {
 		if err = deleteRelation(db, req.ClusterId); err != nil {
