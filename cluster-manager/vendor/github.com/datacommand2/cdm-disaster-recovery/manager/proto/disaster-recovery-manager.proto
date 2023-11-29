@@ -1,0 +1,1134 @@
+syntax = "proto3";
+
+package drms;
+
+import "google/api/annotations.proto";
+import "github.com/datacommand2/cdm-center/cluster-manager/proto/cluster-manager.proto";
+import "github.com/datacommand2/cdm-cloud/services/scheduler/proto/schedule.proto";
+import "github.com/datacommand2/cdm-cloud/services/identity/proto/identity.proto";
+import "google/protobuf/wrappers.proto";
+
+service DisasterRecoveryManager {
+    // 클러스터 삭제 가능 여부 확인
+    rpc CheckDeletableCluster(CheckDeletableClusterRequest) returns (CheckDeletableClusterResponse) {
+    }
+
+    // 클러스터 비보호 인스턴스 목록 조회
+    rpc GetUnprotectedInstanceList(UnprotectedInstanceListRequest) returns (UnprotectedInstanceListResponse) {
+        option (google.api.http) = { get: "/recovery/unprotected-instances"; };
+    }
+
+    // 보호그룹 목록 조회
+    rpc GetProtectionGroupList(ProtectionGroupListRequest) returns (ProtectionGroupListResponse) {
+        option (google.api.http) = { get: "/recovery/groups"; };
+    }
+
+    // 보호그룹 등록
+    rpc AddProtectionGroup(AddProtectionGroupRequest) returns (ProtectionGroupResponse) {
+        option (google.api.http) = { post: "/recovery/groups"; body: "*"; };
+    }
+
+    // 보호그룹 조회
+    rpc GetProtectionGroup(ProtectionGroupRequest) returns (ProtectionGroupResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}"; };
+    }
+
+	  // 보호그룹 수정
+    rpc UpdateProtectionGroup(UpdateProtectionGroupRequest) returns (ProtectionGroupResponse) {
+        option (google.api.http) = { patch: "/recovery/groups/{group_id}"; body: "*"; };
+    }
+
+    // 보호그룹 삭제
+    rpc DeleteProtectionGroup(DeleteProtectionGroupRequest) returns (DeleteProtectionGroupResponse) {
+        option (google.api.http) = { delete: "/recovery/groups/{group_id}"; };
+    }
+
+    // 보호그룹 스냅샷 목록 조회
+    rpc GetProtectionGroupSnapshotList(ProtectionGroupSnapshotListRequest) returns (ProtectionGroupSnapshotListResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/snapshots"; };
+    }
+
+    // 보호그룹 스냅샷 추가
+    rpc AddProtectionGroupSnapshotQueue(ProtectionGroupSnapshotRequest) returns (ProtectionGroupSnapshotMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/snapshots"; };
+    }
+
+    // 보호그룹 스냅샷 삭제
+    rpc DeleteProtectionGroupSnapshot(DeleteProtectionGroupSnapshotRequest) returns (DeleteProtectionGroupSnapshotResponse) {
+    }
+
+    // 재해복구계획 목록 조회
+    rpc GetRecoveryPlanList(RecoveryPlanListRequest) returns (RecoveryPlanListResponse){
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/plans"; };
+    }
+
+    // 재해복구계획 등록
+    rpc AddRecoveryPlan(AddRecoveryPlanRequest) returns (RecoveryPlanResponse){
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/plans"; body: "*"; };
+    }
+
+    // 재해복구계획 조회
+    rpc GetRecoveryPlan(RecoveryPlanRequest) returns (RecoveryPlanResponse){
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/plans/{plan_id}"; };
+    }
+
+    // 재해복구계획 수정
+    rpc UpdateRecoveryPlan(UpdateRecoveryPlanRequest) returns (RecoveryPlanResponse){
+        option (google.api.http) = { patch: "/recovery/groups/{group_id}/plans/{plan_id}"; body: "*"; };
+    }
+
+    // 재해복구계획 삭제
+    rpc DeleteRecoveryPlan(RecoveryPlanRequest) returns (DeleteRecoveryPlanResponse){
+        option (google.api.http) = { delete: "/recovery/groups/{group_id}/plans/{plan_id}"; };
+    }
+
+    // 재해복구작업 목록 조회
+    rpc GetRecoveryJobList (RecoveryJobListRequest) returns (RecoveryJobListResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs"; };
+    }
+
+    // 재해복구작업 생성
+    rpc AddRecoveryJob (AddRecoveryJobRequest) returns (RecoveryJobResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs"; body: "*"; };
+    }
+
+    // 재해복구작업 조회
+    rpc GetRecoveryJob (RecoveryJobRequest) returns (RecoveryJobResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}"; };
+    }
+
+    // 재해복구작업 수정
+    rpc UpdateRecoveryJob (UpdateRecoveryJobRequest) returns (RecoveryJobResponse) {
+        option (google.api.http) = { patch: "/recovery/groups/{group_id}/jobs/{job_id}"; body: "*"; };
+    }
+
+    // 재해복구작업 삭제
+    rpc DeleteRecoveryJob (RecoveryJobRequest) returns (DeleteRecoveryJobResponse) {
+        option (google.api.http) = { delete: "/recovery/groups/{group_id}/jobs/{job_id}"; };
+    }
+
+    // 재해복구작업 모니터링
+    rpc MonitorRecoveryJob (MonitorRecoveryJobRequest) returns (stream MonitorRecoveryJobResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}/monitor"; };
+    }
+
+    // 재해복구작업 작업내역 모니터링
+    rpc MonitorRecoveryTaskLogs (MonitorRecoveryJobRequest) returns (stream MonitorRecoveryTaskLogsResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}/monitor/task-logs"; };
+    }
+
+    // 재해복구작업 인스턴스 모니터링
+    rpc MonitorRecoveryJobInstanceList (MonitorRecoveryJobRequest) returns (stream MonitorRecoveryJobInstanceListResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}/monitor/instances"; };
+    }
+
+    // 재해복구작업 볼륨 모니터링
+    rpc MonitorRecoveryJobVolumeList (MonitorRecoveryJobRequest) returns (stream MonitorRecoveryJobVolumeListResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}/monitor/volumes"; };
+    }
+
+    // 재해복구작업 모든 상태 모니터링
+    rpc MonitorRecoveryJobStatus (MonitorRecoveryJobRequest) returns (stream MonitorRecoveryJobStatusResponse) {
+        option (google.api.http) = { get: "/recovery/groups/{group_id}/jobs/{job_id}/monitors"; };
+    }
+
+    // 재해복구작업 일시중지
+    rpc PauseRecoveryJob (PauseRecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/pause"; };
+    }
+
+    // 재해복구작업 일시중지 시간 연장
+    rpc ExtendRecoveryJobPauseTime (ExtendRecoveryJobPausingTimeRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/pause/extend"; };
+    }
+
+    // 재해복구작업 재개
+    rpc ResumeRecoveryJob (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/resume"; };
+    }
+
+    // 재해복구작업 취소
+    rpc CancelRecoveryJob (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/cancel"; };
+    }
+
+    // 재해복구작업 롤백: 모의훈련
+    rpc DoSimulationJobRollback (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/rollback/simulation"; };
+    }
+
+    // 재해복구작업 롤백: 재해복구
+    rpc DoMigrationJobRollback (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/rollback/migration"; };
+    }
+
+    // 재해복구작업 롤백 재시도
+    rpc RetryRecoveryJobRollback (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/rollback/retry"; };
+    }
+
+    // 재해복구작업 롤백 대기시간 연장
+    rpc ExtendRecoveryJobRollbackTime (ExtendRecoveryJobRollbackTimeRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/rollback/extend"; body: "*"; };
+    }
+
+    // 재해복구작업 롤백 무시
+    rpc IgnoreRecoveryJobRollback (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/rollback/ignore"; };
+    }
+
+    // 재해복구작업 확정
+    rpc ConfirmRecoveryJob (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/confirm"; };
+    }
+
+    // 재해복구작업 확정 재시도
+    rpc RetryConfirmRecoveryJob (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/confirm/retry"; };
+    }
+
+    // 재해복구작업 확정 취소
+    rpc CancelConfirmRecoveryJob (RecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/confirm/cancel"; };
+    }
+
+    // 재해복구작업 재시도 (재해복구)
+    rpc RetryRecoveryJob (RetryRecoveryJobRequest) returns (RecoveryJobMessageResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/retry"; };
+    }
+
+    // 재해복구작업 강제 삭제
+    rpc ForceDeleteRecoveryJob (RecoveryJobRequest) returns (DeleteRecoveryJobResponse) {
+        option (google.api.http) = { post: "/recovery/groups/{group_id}/jobs/{job_id}/force-delete"; };
+    }
+
+    // 보호그룹 history 조회
+    rpc GetProtectionGroupHistory(Empty) returns (ProtectionGroupHistoryResponse) {
+        option (google.api.http) = { get: "/recovery/history"; };
+    }
+
+    // 재해복구결과 보고서 목록 조회
+    rpc GetRecoveryReportList (RecoveryReportListRequest) returns (RecoveryReportListResponse) {
+        option (google.api.http) = { get: "/recovery/history/{group_id}/reports/{group_name}/list"; };
+    }
+
+    // 재해복구결과 보고서 조회
+    rpc GetRecoveryReport (RecoveryReportRequest) returns (RecoveryReportResponse) {
+        option (google.api.http) = { get: "/recovery/history/{group_id}/reports/{result_id}/detail"; };
+    }
+
+    // 재해복구결과 보고서 삭제 (모의훈련)
+    rpc DeleteRecoveryReport (DeleteRecoveryReportRequest) returns (DeleteRecoveryReportResponse) {
+        option (google.api.http) = { delete: "/recovery/history/{group_id}/reports/{result_id}"; };
+    }
+
+    // 클러스터 요약 정보 조회
+    rpc GetClusterSummary (Empty) returns (ClusterSummaryResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/summary/clusters"; };
+    }
+
+    // 보호그룹 요약 정보 조회
+    rpc GetProtectionGroupSummary (Empty) returns (ProtectionGroupSummaryResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/summary/groups"; };
+    }
+
+    // 인스턴스 요약 정보 조회
+    rpc GetInstanceSummary (Empty) returns (InstanceSummaryResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/summary/instances"; };
+    }
+
+    // 볼륨 요약 정보 조회
+    rpc GetVolumeSummary (Empty) returns (VolumeSummaryResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/summary/volumes"; };
+    }
+
+    // 재해복구작업 요약 정보 조회
+    rpc GetJobSummary (JobSummaryRequest) returns (JobSummaryResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/summary/jobs"; };
+    }
+
+    // 클러스터 관계 목록 조회
+    rpc GetClusterRelationshipList (ClusterRelationshipListRequest) returns (ClusterRelationshipListResponse) {
+        option (google.api.http) = { get: "/recovery/dashboard/cluster-relationships"; };
+    }
+
+    // 복구대상 클러스터 하이퍼바이저 리소스 조회
+    rpc GetRecoveryClusterHypervisorResources (RecoveryHypervisorResourceRequest) returns (RecoveryHypervisorResourceResponse) {
+         option (google.api.http) = { get: "/recovery/groups/{group_id}/plans/{plan_id}/hypervisor-resources"; };
+    }
+
+    rpc GetInstanceTemplateList(InstanceTemplateListRequest) returns (InstanceTemplateListResponse) {
+        option (google.api.http) = {get: "/recovery/templates";};
+    }
+
+    rpc GetInstanceTemplate(InstanceTemplateRequest) returns(InstanceTemplateResponse) {
+        option (google.api.http) = {get: "/recovery/templates/{template_id}";};
+    }
+
+    rpc AddInstanceTemplate(AddInstanceTemplateRequest) returns (InstanceTemplateResponse) {
+        option (google.api.http) = {post: "/recovery/templates", body: "*"};
+    }
+
+    rpc DeleteInstanceTemplate(DeleteInstanceTemplateRequest) returns (DeleteInstanceTemplateResponse) {
+        option (google.api.http) = {delete: "/recovery/templates/{template_id}";};
+    }
+
+
+
+}
+
+message Empty {}
+
+message Message {
+    string code = 1;
+    string contents = 2;
+}
+
+message Pagination {
+    google.protobuf.UInt64Value page = 1;
+    google.protobuf.UInt64Value total_page = 2;
+    google.protobuf.UInt64Value total_items = 3;
+}
+
+message CheckDeletableClusterRequest {
+    uint64 cluster_id = 1;
+}
+
+message CheckDeletableClusterResponse {
+    bool deletable = 1;
+    Message message = 2;
+}
+
+message UnprotectedInstanceListResponse {
+    repeated cms.ClusterInstance instances = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message UnprotectedInstanceListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    uint64 cluster_id = 3;
+    uint64 cluster_tenant_id = 4;
+    uint64 cluster_availability_zone_id = 5;
+    uint64 cluster_hypervisor_id = 6;
+    string name = 7;
+}
+
+message RecoveryPlanAbnormalStateReason {
+    repeated Message warning = 1;
+    repeated Message critical = 2;
+    repeated Message emergency = 3;
+    repeated Message mirroring = 4;
+}
+
+message ProtectionGroup {
+    uint64 id = 1;
+    cms.Group owner_group = 2;
+    cms.Cluster protection_cluster = 3;
+    string name = 4;
+    string remarks = 5;
+    string recovery_point_objective_type = 6;
+    uint32 recovery_point_objective = 7;
+    uint32 recovery_time_objective = 8;
+    string snapshot_interval_type = 9;
+    uint32 snapshot_interval = 10;
+    string state_code = 11;
+    RecoveryPlanAbnormalStateReason abnormal_state_reasons = 12;
+    repeated cms.ClusterInstance instances = 13;
+    int64 created_at = 14;
+    int64 updated_at = 15;
+    bool updatable = 16;
+}
+
+message ProtectionGroupListResponse {
+    repeated ProtectionGroup groups = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message ProtectionGroupListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    uint64 protection_cluster_id = 3;
+    string protection_cluster_type_code = 4;
+    uint64 owner_group_id = 5;
+    string name = 6;
+}
+
+message ProtectionGroupResponse {
+    ProtectionGroup group = 1;
+    Message message = 2;
+}
+
+message AddProtectionGroupRequest {
+    ProtectionGroup group = 1;
+}
+
+message ProtectionGroupRequest {
+    uint64 group_id = 1;
+}
+
+message UpdateProtectionGroupRequest {
+    uint64 group_id = 1;
+    ProtectionGroup group = 2;
+}
+
+message DeleteProtectionGroupResponse {
+    Message message = 1;
+}
+
+message DeleteProtectionGroupRequest {
+    uint64 group_id = 1;
+}
+
+message ProtectionGroupSnapshotListRequest {
+    uint64 group_id = 1;
+}
+
+message ProtectionGroupSnapshotListResponse {
+    repeated ProtectionGroupSnapshot snapshots = 1;
+    Message message = 2;
+}
+
+message ProtectionGroupSnapshotRequest {
+    uint64 group_id = 1;
+}
+
+message ProtectionGroupSnapshotMessageResponse {
+    Message message = 1;
+}
+
+message DeleteProtectionGroupSnapshotRequest {
+    uint64 group_id = 1;
+    uint64 snapshot_id = 2;
+}
+
+message DeleteProtectionGroupSnapshotResponse {
+    Message message = 1;
+}
+
+message ProtectionCluster {
+    uint64 id = 1;
+    string name = 2;
+    repeated ProtectionGroup groups = 3;
+}
+
+message History {
+    repeated ProtectionCluster clusters = 1;
+}
+
+message ProtectionGroupHistoryResponse {
+    History history = 1;
+    Message message = 2;
+}
+
+message TenantRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterTenant protection_cluster_tenant = 2;
+    cms.ClusterTenant recovery_cluster_tenant = 3;
+    string recovery_cluster_tenant_mirror_name = 4;
+    bool recovery_cluster_tenant_mirror_name_update_flag = 5;
+    Message recovery_cluster_tenant_mirror_name_update_reason = 6;
+}
+
+message AvailabilityZoneRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterAvailabilityZone protection_cluster_availability_zone = 2;
+    cms.ClusterAvailabilityZone recovery_cluster_availability_zone = 3;
+    bool recovery_cluster_availability_zone_update_flag = 4;
+    Message recovery_cluster_availability_zone_update_reason = 5;
+}
+
+message ExternalNetworkRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterNetwork protection_cluster_external_network = 2;
+    cms.ClusterNetwork recovery_cluster_external_network = 3;
+    bool recovery_cluster_external_network_update_flag = 4;
+    Message recovery_cluster_external_network_update_reason = 5;
+}
+
+message RouterRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterRouter protection_cluster_router = 2;
+    cms.ClusterNetwork recovery_cluster_external_network = 3;
+    bool recovery_cluster_external_network_update_flag = 4;
+    Message recovery_cluster_external_network_update_reason = 5;
+    repeated cms.ClusterNetworkRoutingInterface recovery_cluster_external_routing_interfaces = 6;
+}
+
+message StorageRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterStorage protection_cluster_storage = 2;
+    cms.ClusterStorage recovery_cluster_storage = 3;
+    bool recovery_cluster_storage_update_flag = 4;
+    Message recovery_cluster_storage_update_reason = 5;
+    bool unavailable_flag = 6;
+    Message unavailable_reason = 7;
+}
+
+message InstanceRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterInstance protection_cluster_instance = 2;
+    cms.ClusterAvailabilityZone recovery_cluster_availability_zone = 3;
+    bool recovery_cluster_availability_zone_update_flag = 4;
+    Message recovery_cluster_availability_zone_update_reason = 5;
+    cms.ClusterHypervisor recovery_cluster_hypervisor = 6;
+    bool auto_start_flag = 7;
+    bool diagnosis_flag = 8;
+    string diagnosis_method_code = 9;
+    string diagnosis_method_data = 10;
+    uint32 diagnosis_timeout = 11;
+    repeated cms.ClusterInstance dependencies = 12;
+}
+
+message FloatingIPRecoveryPlan {
+    cms.ClusterFloatingIP protection_cluster_floating_ip = 1;
+    bool unavailable_flag = 2;
+    Message unavailable_reason = 3;
+}
+
+message VolumeRecoveryPlan {
+    string recovery_type_code = 1;
+    cms.ClusterVolume protection_cluster_volume = 2;
+    cms.ClusterStorage recovery_cluster_storage = 3;
+    bool recovery_cluster_storage_update_flag = 4;
+    Message recovery_cluster_storage_update_reason = 5;
+    bool unavailable_flag = 6;
+    Message unavailable_reason = 7;
+}
+
+message RecoveryPlanDetail {
+    repeated TenantRecoveryPlan tenants = 1;
+    repeated AvailabilityZoneRecoveryPlan availability_zones = 2;
+    repeated ExternalNetworkRecoveryPlan external_networks = 3;
+    repeated RouterRecoveryPlan routers = 4;
+    repeated StorageRecoveryPlan storages = 5;
+    repeated InstanceRecoveryPlan instances = 6;
+    repeated FloatingIPRecoveryPlan floating_ips = 7;
+    repeated VolumeRecoveryPlan volumes = 8;
+    repeated cms.ClusterSecurityGroup extra_remote_security_groups = 9;
+}
+
+message RecoveryPlan {
+    uint64 id = 1;
+    cms.Cluster protection_cluster = 2;
+    cms.Cluster recovery_cluster = 3;
+    string name = 4;
+    uint32 snapshot_retention_count = 5;
+    string remarks = 6;
+    string direction_code = 7;
+    string state_code = 8;
+    string mirror_state_code = 9;
+    RecoveryPlanAbnormalStateReason abnormal_state_reasons = 10;
+    int64 created_at = 11;
+    int64 updated_at = 12;
+    RecoveryPlanDetail detail = 13;
+    bool updatable = 14;
+}
+
+message RecoveryPlanListResponse {
+    repeated RecoveryPlan plans = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message RecoveryPlanListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    string name = 3;
+    uint64 group_id = 4;
+}
+
+message RecoveryPlanResponse {
+    RecoveryPlan plan = 1;
+    Message message = 2;
+}
+
+message AddRecoveryPlanRequest {
+    uint64 group_id = 1;
+    RecoveryPlan plan = 2;
+    bool force = 3;
+}
+
+message RecoveryPlanRequest {
+    uint64 group_id = 1;
+    uint64 plan_id = 2;
+}
+
+message UpdateRecoveryPlanRequest {
+    uint64 group_id = 1;
+    uint64 plan_id = 2;
+    RecoveryPlan plan = 3;
+    bool force = 4;
+}
+
+message DeleteRecoveryPlanResponse {
+    Message message = 1;
+}
+
+message ProtectionGroupSnapshot {
+    uint64 id = 1;
+    string name = 2;
+    int64 created_at = 3;
+    string status = 4;
+}
+
+message RecoveryJob {
+    uint64 id = 1;
+    identity.SimpleUser operator = 2;
+    ProtectionGroup group = 3;
+    RecoveryPlan plan = 4;
+    string type_code = 5;
+    string recovery_point_type_code = 8;
+    ProtectionGroupSnapshot recovery_point_snapshot = 9;
+    scheduler.Schedule schedule = 11;
+    int64 next_runtime = 12;
+    string operation_code = 14;
+    string state_code = 15;
+    int64 created_at = 16;
+    int64 updated_at = 17;
+}
+
+message RecoveryJobListResponse {
+    repeated RecoveryJob jobs = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message RecoveryJobListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    string name = 3;
+    uint64 plan_id = 4;
+    string type = 5;
+    uint64 group_id = 6;
+}
+
+message AddRecoveryJobRequest {
+    uint64 group_id = 1;
+    RecoveryJob job = 2;
+    bool force = 3;
+}
+
+message RecoveryJobResponse {
+    RecoveryJob job = 1;
+    Message message = 2;
+}
+
+message RecoveryJobRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+}
+
+message UpdateRecoveryJobRequest {
+    uint64 group_id =1;
+    uint64 job_id = 2;
+    RecoveryJob job = 3;
+    bool force = 4;
+}
+
+message DeleteRecoveryJobResponse {
+    Message message = 1;
+}
+
+message RecoveryJobStatus {
+    int64 started_at = 1;
+    int64 finished_at = 2;
+    int64 elapsed_time = 3;
+    string operation_code = 4;
+    string state_code = 5;
+    string result_code = 6;
+    bool warning_flag = 7;
+    repeated Message warning_reasons = 8;
+    repeated Message failed_reasons = 9;
+    int64 resume_at = 10;
+    int64 rollback_at = 11;
+}
+
+message MonitorRecoveryJobResponse {
+    RecoveryJobStatus status = 1;
+}
+
+message RecoveryTaskLog {
+    string code = 1;
+    string contents = 2;
+    uint64 log_seq = 3;
+    int64 log_dt = 4;
+}
+
+message MonitorRecoveryTaskLogsResponse {
+    repeated RecoveryTaskLog task_logs = 1;
+}
+
+message RecoveryJobInstanceStatus {
+    cms.ClusterInstance instance = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message MonitorRecoveryJobInstanceListResponse {
+    repeated RecoveryJobInstanceStatus instances = 1;
+}
+
+message RecoveryJobVolumeStatus {
+    cms.ClusterVolume volume = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message MonitorRecoveryJobVolumeListResponse {
+    repeated RecoveryJobVolumeStatus volumes = 1;
+}
+
+message RecoveryJobTenantStatus {
+    cms.ClusterTenant tenant = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobSecurityGroupStatus {
+    cms.ClusterSecurityGroup security_group = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobNetworkStatus {
+    cms.ClusterNetwork network = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobSubnetStatus {
+    cms.ClusterSubnet subnet = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobFloatingIPStatus {
+    cms.ClusterFloatingIP floating_ip = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobRouterStatus {
+    cms.ClusterRouter router = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobKeypairStatus {
+    cms.ClusterKeypair keyfair = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+message RecoveryJobSpecStatus {
+    cms.ClusterInstanceSpec instance_spec = 1;
+    string recovery_point_type_code = 2;
+    int64 recovery_point = 3;
+    int64 elapsed_time = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string state_code = 7;
+    string result_code = 8;
+    string type_code = 9;
+    Message failed_reason = 10;
+}
+
+
+message MonitorRecoveryJobRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+    uint32 interval = 3;
+}
+
+message MonitorRecoveryJobStatusResponse {
+    RecoveryJobStatus status = 1;
+    repeated RecoveryJobTenantStatus tenants = 2;
+    repeated RecoveryJobSecurityGroupStatus security_groups = 3;
+    repeated RecoveryJobNetworkStatus networks = 4;
+    repeated RecoveryJobSubnetStatus subnets = 5;
+    repeated RecoveryJobFloatingIPStatus floating_ip = 6;
+    repeated RecoveryJobRouterStatus routers = 7;
+    repeated RecoveryJobVolumeStatus volumes = 8;
+    repeated RecoveryJobKeypairStatus keypair = 9;
+    repeated RecoveryJobSpecStatus instance_specs = 10;
+    repeated RecoveryJobInstanceStatus instances = 11;
+}
+
+message RecoveryJobMessageResponse {
+    Message message = 1;
+}
+
+message PauseRecoveryJobRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+}
+
+message ExtendRecoveryJobPausingTimeRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+    uint32 extend_time = 3;
+}
+
+message ExtendRecoveryJobRollbackTimeRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+    uint32 extend_time = 3;
+}
+
+message RetryRecoveryJobRequest {
+    uint64 group_id = 1;
+    uint64 job_id = 2;
+    string recovery_point_type_code = 3;
+    ProtectionGroupSnapshot recovery_point_snapshot = 4;
+    repeated cms.ClusterInstance instances = 5;
+}
+
+message RecoveryResultInstance {
+    cms.ClusterInstance protection_cluster_instance = 1;
+    cms.ClusterInstance recovery_cluster_instance = 2;
+    string recovery_point_type_code = 3;
+    int64 recovery_point = 4;
+    bool auto_start_flag = 5;
+    bool diagnosis_flag = 6;
+    string diagnosis_method_code = 7;
+    string diagnosis_method_data = 8;
+    uint32 diagnosis_timeout = 9;
+    repeated cms.ClusterInstance dependencies = 10;
+    int64 started_at = 11;
+    int64 finished_at = 12;
+    string result_code = 13;
+    Message failed_reason = 14;
+}
+
+message RecoveryResultVolume {
+    cms.ClusterVolume protection_cluster_volume = 1;
+    cms.ClusterVolume recovery_cluster_volume = 2;
+    string recovery_point_type_code = 3;
+    int64 recovery_point = 4;
+    int64 started_at = 5;
+    int64 finished_at = 6;
+    string result_code = 7;
+    Message failed_reason = 8;
+    bool rollback_flag = 9;
+}
+
+message RecoveryResultRouter {
+    cms.ClusterRouter protection_cluster_router = 1;
+    cms.ClusterRouter recovery_cluster_router = 2;
+}
+
+message RecoveryResult {
+    uint64 id = 1;
+    uint64 operator_id = 2;
+    string operator_account = 3;
+    string operator_name = 4;
+    string operator_department = 5;
+    string operator_position = 6;
+    uint64 approver_id = 7;
+    string approver_account = 8;
+    string approver_name = 9;
+    string approver_department = 10;
+    string approver_position = 11;
+    uint64 protection_group_id = 12;
+    string protection_group_name = 13;
+    string protection_group_remarks = 14;
+    uint64 recovery_plan_id = 15;
+    string recovery_plan_name = 16;
+    string recovery_plan_remarks = 17;
+    uint64 protection_cluster_id = 18;
+    string protection_cluster_type_code = 19;
+    string protection_cluster_name = 20;
+    string protection_cluster_remarks = 21;
+    uint64 recovery_cluster_id = 22;
+    string recovery_cluster_type_code = 23;
+    string recovery_cluster_name = 24;
+    string recovery_cluster_remarks = 25;
+    string recovery_type_code = 26;
+    string recovery_direction_code = 27;
+    string recovery_point_objective_type = 28;
+    uint32 recovery_point_objective = 29;
+    uint32 recovery_time_objective = 30;
+    string recovery_point_type_code = 31;
+    int64 recovery_point = 32;
+    string schedule_type = 33;
+    int64 started_at = 34;
+    int64 finished_at = 35;
+    int64 elapsed_time = 36;
+    string result_code = 37;
+    bool warning_flag = 38;
+    repeated Message warning_reasons = 39;
+    repeated Message failed_reasons = 40;
+    repeated RecoveryTaskLog task_logs = 41;
+    repeated RecoveryResultInstance instances = 42;
+    repeated RecoveryResultVolume volumes = 43;
+    repeated RecoveryResultRouter routers = 44;
+}
+
+message RecoveryReportListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    string type = 3;
+    string result = 4;
+    uint64 group_id = 5;
+    string group_name = 6;
+}
+
+message RecoveryReportListResponse {
+    repeated RecoveryResult reports = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message RecoveryReportRequest {
+    uint64 group_id = 1;
+    uint64 result_id = 2;
+}
+
+message RecoveryReportResponse {
+    RecoveryResult report = 1;
+    Message message = 2;
+}
+
+message DeleteRecoveryReportRequest {
+    uint64 group_id = 1;
+    uint64 result_id = 2;
+}
+
+message DeleteRecoveryReportResponse {
+    Message message = 1;
+}
+
+message ClusterSummary {
+    uint64 total_cluster = 1;
+    uint64 active_cluster = 2;
+    uint64 inactive_cluster = 3;
+}
+
+message ClusterSummaryResponse {
+    ClusterSummary summary = 1;
+    Message message = 2;
+}
+
+message ProtectionGroupSummary {
+    uint64 total_group = 1;
+    uint64 normal_group = 2;
+    uint64 warning_group = 3;
+    uint64 critical_group = 4;
+    uint64 emergency_group = 5;
+}
+
+message ProtectionGroupSummaryResponse {
+    ProtectionGroupSummary summary = 1;
+    Message message = 2;
+}
+
+message InstanceSummary {
+    uint64 total_instance = 1;
+    uint64 protection_instance = 2;
+}
+
+message InstanceSummaryResponse {
+    InstanceSummary summary = 1;
+    Message message = 2;
+}
+
+message VolumeSummary {
+    uint64 protection_volume = 1;
+}
+
+message VolumeSummaryResponse {
+    VolumeSummary summary = 1;
+    Message message = 2;
+}
+
+message JobSummary {
+    string date = 1;
+    uint64 success = 2;
+    uint64 fail = 3;
+}
+
+message JobSummaryRequest {
+    string recovery_type = 1;
+    google.protobuf.Int64Value start_date = 2;
+    google.protobuf.Int64Value end_date = 3;
+}
+
+message JobSummaryResponse {
+    repeated JobSummary summary = 1;
+    Message message = 2;
+}
+
+message RelationshipPlan {
+    uint64 id = 1;
+    string name = 2;
+    ProtectionGroup group = 3;
+    string state_code = 4;
+}
+
+message ClusterRelationship {
+    cms.Cluster protection_cluster = 1;
+    cms.Cluster recovery_cluster = 2;
+    string state_code = 3;
+    repeated RelationshipPlan plans = 4;
+}
+
+message ClusterRelationshipListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+}
+
+message ClusterRelationshipListResponse {
+    repeated ClusterRelationship cluster_relationships = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message RecoveryHypervisorResource {
+    uint64 id = 1;
+    string name = 2;
+    uint32 vcpu_total_cnt = 3;
+    uint32 vcpu_used_cnt = 4;
+    uint32 vcpu_expected_usage = 5;
+    uint64 mem_total_bytes = 6;
+    uint64 mem_used_bytes = 7;
+    uint64 mem_expected_usage = 8;
+    uint64 disk_total_bytes = 9;
+    uint64 disk_used_bytes = 10;
+    uint64 disk_expected_usage = 11;
+}
+
+message RecoveryHypervisorResourceRequest {
+    uint64 group_id = 1;
+    uint64 plan_id = 2;
+    uint64 snapshot_id = 3;
+    string recovery_point_type_code = 4;
+}
+
+message RecoveryHypervisorResourceResponse {
+    repeated RecoveryHypervisorResource hypervisor_resources = 1;
+    bool usable = 2;
+    Message message = 3;
+}
+
+message InstanceTemplateInstanceDependency {
+    string name = 1;
+}
+
+message InstanceTemplateInstance {
+    string protection_cluster_instance_name = 1;
+    bool auto_start_flag = 2;
+    bool diagnosis_flag = 3;
+    string diagnosis_method_code = 4;
+    string diagnosis_method_data = 5;
+    uint32 diagnosis_timeout = 6;
+    repeated InstanceTemplateInstanceDependency dependencies = 7;
+}
+
+message InstanceTemplate {
+    uint64 id = 1;
+    cms.Group owner_group = 2;
+    string name = 3;
+    string remarks = 4;
+    int64 created_at = 5;
+    repeated InstanceTemplateInstance instances = 6;
+}
+
+message InstanceTemplateListResponse {
+    repeated InstanceTemplate templates = 1;
+    Pagination pagination = 2;
+    Message message = 3;
+}
+
+message InstanceTemplateListRequest {
+    google.protobuf.UInt64Value limit = 1;
+    google.protobuf.UInt64Value offset = 2;
+    uint64 owner_group_id = 3;
+    string name = 4;
+}
+
+message InstanceTemplateResponse {
+    InstanceTemplate template = 1;
+    Message message = 2;
+}
+
+message InstanceTemplateRequest {
+    uint64 template_id = 1;
+}
+
+message AddInstanceTemplateRequest{
+    InstanceTemplate template = 1;
+}
+
+message DeleteInstanceTemplateRequest {
+    uint64 template_id = 1;
+}
+
+message DeleteInstanceTemplateResponse {
+    Message message = 1;
+}

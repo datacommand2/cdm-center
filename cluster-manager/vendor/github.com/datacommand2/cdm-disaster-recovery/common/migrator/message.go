@@ -1,12 +1,14 @@
 package migrator
 
+import drms "github.com/datacommand2/cdm-disaster-recovery/manager/proto"
+
 // RecoveryJobMessage 재해복구작업의 상태값 저장하는 메시지
 type RecoveryJobMessage struct {
 	JobID     uint64                `json:"job_id"`
 	Status    *RecoveryJobStatus    `json:"status"`
 	Operation *RecoveryJobOperation `json:"operation"`
 	Result    *RecoveryJobResult    `json:"result"`
-	//Detail    *drms.RecoveryJob     `json:"detail"`
+	Detail    *drms.RecoveryJob     `json:"detail"`
 }
 
 // RecoveryJobTaskStatusMessage 재해복구작업 task 상태값 저장하는 메시지

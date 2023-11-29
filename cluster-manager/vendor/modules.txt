@@ -75,11 +75,17 @@ github.com/datacommand2/cdm-cloud/common/util
 # github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7
 ## explicit
 github.com/datacommand2/cdm-cloud/services/identity/proto
-# github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129065503-7cad00c52cc9
+# github.com/datacommand2/cdm-cloud/services/scheduler v0.0.0-20231129021537-1dc16b41343b
+github.com/datacommand2/cdm-cloud/services/scheduler/proto
+# github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129233138-279c03db8ad2
 ## explicit
 github.com/datacommand2/cdm-disaster-recovery/common/constant
+github.com/datacommand2/cdm-disaster-recovery/common/database/model
 github.com/datacommand2/cdm-disaster-recovery/common/migrator
 github.com/datacommand2/cdm-disaster-recovery/common/mirror
+# github.com/datacommand2/cdm-disaster-recovery/manager v0.0.0-20231129232117-0168f1f49c94
+## explicit
+github.com/datacommand2/cdm-disaster-recovery/manager/proto
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/dgrijalva/jwt-go v3.2.0+incompatible

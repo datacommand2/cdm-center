@@ -1,6 +1,8 @@
 package mirror
 
 import (
+	"github.com/datacommand2/cdm-center/cluster-manager/storage"
+	"github.com/datacommand2/cdm-center/cluster-manager/volume"
 	"github.com/datacommand2/cdm-cloud/common/errors"
 	"github.com/datacommand2/cdm-cloud/common/store"
 
@@ -30,10 +32,10 @@ type Agent struct {
 
 // Volume 볼륨 복제 정보에 대한 구조체
 type Volume struct {
-	//SourceClusterStorage *storage.ClusterStorage `json:"source_cluster_storage,omitempty"`
-	//TargetClusterStorage *storage.ClusterStorage `json:"target_cluster_storage,omitempty"`
-	//SourceVolume         *volume.ClusterVolume   `json:"source_volume,omitempty"`
-	SourceAgent *Agent `json:"source_agent,omitempty"`
+	SourceClusterStorage *storage.ClusterStorage `json:"source_cluster_storage,omitempty"`
+	TargetClusterStorage *storage.ClusterStorage `json:"target_cluster_storage,omitempty"`
+	SourceVolume         *volume.ClusterVolume   `json:"source_volume,omitempty"`
+	SourceAgent          *Agent                  `json:"source_agent,omitempty"`
 }
 
 // VolumeOperation 볼륨 복제 오퍼레이션에 대한 구조체
@@ -123,14 +125,14 @@ func (v *Volume) GetMirrorEnvironment() (*Environment, error) {
 }
 
 // GetSourceStorage 볼륨 복제의 source 스토리지 정보 조회 함수
-//func (v *Volume) GetSourceStorage() (*storage.ClusterStorage, error) {
-//	return storage.GetStorage(v.SourceClusterStorage.ClusterID, v.SourceClusterStorage.StorageID)
-//}
-//
-//// GetTargetStorage 볼륨 복제의 target 스토리지 정보 조회 함수
-//func (v *Volume) GetTargetStorage() (*storage.ClusterStorage, error) {
-//	return storage.GetStorage(v.TargetClusterStorage.ClusterID, v.TargetClusterStorage.StorageID)
-//}
+func (v *Volume) GetSourceStorage() (*storage.ClusterStorage, error) {
+	return storage.GetStorage(v.SourceClusterStorage.ClusterID, v.SourceClusterStorage.StorageID)
+}
+
+// GetTargetStorage 볼륨 복제의 target 스토리지 정보 조회 함수
+func (v *Volume) GetTargetStorage() (*storage.ClusterStorage, error) {
+	return storage.GetStorage(v.TargetClusterStorage.ClusterID, v.TargetClusterStorage.StorageID)
+}
 
 // GetOperation 볼륨 복제에 오퍼 레이션 조회 함수
 func (v *Volume) GetOperation() (*VolumeOperation, error) {

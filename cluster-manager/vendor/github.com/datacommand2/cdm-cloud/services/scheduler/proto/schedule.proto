@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package scheduler;
+
+option go_package = "github.com/datacommand2/cdm-cloud/services/scheduler/proto;scheduler";
+
+service Scheduler {
+    rpc GetSchedule(ScheduleRequest) returns (ScheduleResponse) ;
+    rpc CreateSchedule(ScheduleRequest) returns (ScheduleResponse) ;
+    rpc UpdateSchedule(ScheduleRequest) returns (ScheduleResponse) ;
+    rpc DeleteSchedule(ScheduleRequest) returns (Empty) ;
+    rpc CalculateNextRuntime(ScheduleRequest) returns (ScheduleNextRuntimeResponse) ;
+}
+
+message Schedule {
+	uint64 id = 1;
+	bool activation_flag = 2;
+	string topic = 3;
+	string message = 4;
+	int64 start_at = 5;
+	int64 end_at = 6;
+	string type = 7;
+	uint64 interval_minute = 8;
+	uint64 interval_hour = 9;
+	uint64 interval_day = 10;
+	uint64 interval_week = 11;
+	uint64 interval_month = 12;
+	string week_of_month = 13;
+	string day_of_month = 14;
+	string day_of_week = 15;
+	uint64 hour = 16;
+	uint64 minute = 17;
+	string timezone = 18;
+}
+
+message ScheduleRequest {
+    Schedule schedule = 1;
+}
+
+message ScheduleResponse {
+    Schedule schedule = 1;
+    int64 next_runtime = 2;
+}
+
+message ScheduleNextRuntimeResponse {
+    int64 next_runtime = 1;
+}
+
+message Empty {
+}
