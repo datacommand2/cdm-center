@@ -3,7 +3,6 @@ package mirror
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/datacommand2/cdm-center/cluster-manager/storage"
 	"github.com/datacommand2/cdm-cloud/common/errors"
 	"github.com/datacommand2/cdm-cloud/common/store"
 	"path"
@@ -24,10 +23,10 @@ type Message struct {
 }
 
 // Environment 복제 환경 구성/삭제 에서 사용 하며 오퍼 레이션, 상태 값, 에러 사유 메시지 정보로 구성된 구조체
-type Environment struct {
-	SourceClusterStorage *storage.ClusterStorage `json:"source_cluster_storage,omitempty"`
-	TargetClusterStorage *storage.ClusterStorage `json:"target_cluster_storage,omitempty"`
-}
+//type Environment struct {
+//	SourceClusterStorage *storage.ClusterStorage `json:"source_cluster_storage,omitempty"`
+//	TargetClusterStorage *storage.ClusterStorage `json:"target_cluster_storage,omitempty"`
+//}
 
 // EnvironmentOperation 복제 환경의 operation 정보 구조체
 type EnvironmentOperation struct {
@@ -120,15 +119,15 @@ func (e *Environment) GetKeyPrefix() string {
 	return fmt.Sprintf(mirrorEnvironmentKeyPrefixFormat, e.SourceClusterStorage.StorageID, e.TargetClusterStorage.StorageID)
 }
 
-// GetSourceStorage 복제 환경 으로 설정 된 소스 클러스터 스토리지를 조회하는 함수
-func (e *Environment) GetSourceStorage() (*storage.ClusterStorage, error) {
-	return storage.GetStorage(e.SourceClusterStorage.ClusterID, e.SourceClusterStorage.StorageID)
-}
-
-// GetTargetStorage 복제 환경 으로 설정 된 타겟 클러스터 스토리지를 조회하는 함수
-func (e *Environment) GetTargetStorage() (*storage.ClusterStorage, error) {
-	return storage.GetStorage(e.TargetClusterStorage.ClusterID, e.TargetClusterStorage.StorageID)
-}
+//// GetSourceStorage 복제 환경 으로 설정 된 소스 클러스터 스토리지를 조회하는 함수
+//func (e *Environment) GetSourceStorage() (*storage.ClusterStorage, error) {
+//	return storage.GetStorage(e.SourceClusterStorage.ClusterID, e.SourceClusterStorage.StorageID)
+//}
+//
+//// GetTargetStorage 복제 환경 으로 설정 된 타겟 클러스터 스토리지를 조회하는 함수
+//func (e *Environment) GetTargetStorage() (*storage.ClusterStorage, error) {
+//	return storage.GetStorage(e.TargetClusterStorage.ClusterID, e.TargetClusterStorage.StorageID)
+//}
 
 // GetOperation 복제 환경의 operation 을 조회 하는 함수
 func (e *Environment) GetOperation() (*EnvironmentOperation, error) {
