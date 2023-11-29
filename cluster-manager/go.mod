@@ -8,7 +8,8 @@ require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
 	github.com/datacommand2/cdm-cloud/common v0.0.0-20231128060710-080c7906e48b
 	github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7
-	github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129065503-7cad00c52cc9
+	github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129233138-279c03db8ad2
+	github.com/datacommand2/cdm-disaster-recovery/manager v0.0.0-20231129232117-0168f1f49c94
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.4.0
 	github.com/jinzhu/copier v0.3.4
