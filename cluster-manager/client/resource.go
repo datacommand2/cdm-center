@@ -2,6 +2,7 @@ package client
 
 import (
 	"github.com/datacommand2/cdm-center/cluster-manager/database/model"
+	"github.com/datacommand2/cdm-disaster-recovery/common/mirror"
 )
 
 const (
@@ -557,7 +558,7 @@ type GetStorageResult struct {
 // TODO:
 type GetStorageRequest struct {
 	Storage model.ClusterStorage
-	Agent   Agent
+	Agent   mirror.Agent
 }
 
 // GetStorageListResponse 스토리지 목록 조회 Response 구조체
