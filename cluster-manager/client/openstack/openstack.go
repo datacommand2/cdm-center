@@ -2513,19 +2513,6 @@ func removeSecurityGroup(c client.Client, uuid string, name string) error {
 // PreprocessCreatingInstance 인스턴스 생성 전처리 처리
 // NFS volume 의 경우 hypervisor 에 NFS export 마운트 처리 진행
 func (c *Client) PreprocessCreatingInstance(req client.PreprocessCreatingInstanceRequest) error {
-	var agentPort uint
-	if req.Hypervisor.AgentPort == nil || *req.Hypervisor.AgentPort == 0 {
-		agentPort = 61001
-	} else {
-		agentPort = uint(*req.Hypervisor.AgentPort)
-	}
-
-	// TODO:
-	var agent = Agent{
-		IP:   req.Hypervisor.IPAddress,
-		Port: agentPort,
-	}
-
 	for _, s := range req.Storages {
 		if s.TypeCode != storage.ClusterStorageTypeNFS {
 			continue

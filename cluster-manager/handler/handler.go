@@ -29,6 +29,7 @@ import (
 	"github.com/datacommand2/cdm-cloud/common/database"
 	"github.com/datacommand2/cdm-cloud/common/errors"
 	"github.com/datacommand2/cdm-cloud/common/logger"
+	"github.com/datacommand2/cdm-disaster-recovery/common/mirror"
 
 	"context"
 	"crypto/rsa"
@@ -522,7 +523,7 @@ func (h *ClusterManagerHandler) AddCluster(ctx context.Context, req *cms.AddClus
 	ip, _, _ := net.SplitHostPort(u.Host)
 
 	// TODO:
-	var agent = Agent{
+	var agent = mirror.Agent{
 		IP:             ip,
 		Port:           61001,
 		Version:        "1.0.0",

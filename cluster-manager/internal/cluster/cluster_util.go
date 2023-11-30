@@ -12,6 +12,7 @@ import (
 	"github.com/datacommand2/cdm-cloud/common/errors"
 	"github.com/datacommand2/cdm-cloud/common/metadata"
 	"github.com/datacommand2/cdm-cloud/common/store"
+	"github.com/datacommand2/cdm-disaster-recovery/common/mirror"
 	"github.com/jinzhu/gorm"
 	"time"
 )
@@ -173,7 +174,7 @@ func IsAbleToSync(cid uint64) (bool, *SyncStatus) {
 
 // SetAgent cinder 의 agent 접속정보 저장
 // TODO:
-func SetAgent(cid uint64, agent Agent) error {
+func SetAgent(cid uint64, agent mirror.Agent) error {
 	b, _ := json.Marshal(&agent)
 	key := fmt.Sprintf(clusterAgentKeyFormat, cid)
 	if err := store.Put(key, string(b)); err != nil {
@@ -184,7 +185,7 @@ func SetAgent(cid uint64, agent Agent) error {
 
 // GetAgent cinder 의 agent 접속정보 조회
 // TODO:
-func GetAgent(cid uint64) (*Agent, error) {
+func GetAgent(cid uint64) (*mirror.Agent, error) {
 	key := fmt.Sprintf(clusterAgentKeyFormat, cid)
 
 	a, err := store.Get(key)
@@ -196,7 +197,7 @@ func GetAgent(cid uint64) (*Agent, error) {
 	}
 
 	// TODO:
-	var agent Agent
+	var agent mirror.Agent
 	if err = json.Unmarshal([]byte(a), &agent); err != nil {
 		return nil, errors.Unknown(err)
 	}
