@@ -55,7 +55,7 @@ github.com/coreos/go-systemd/journal
 github.com/coreos/pkg/capnslog
 # github.com/cpuguy83/go-md2man/v2 v2.0.0
 github.com/cpuguy83/go-md2man/v2/md2man
-# github.com/datacommand2/cdm-cloud/common v0.0.0-20231128060710-080c7906e48b
+# github.com/datacommand2/cdm-cloud/common v0.0.0-20231205042820-988cc8ba20e0
 ## explicit
 github.com/datacommand2/cdm-cloud/common
 github.com/datacommand2/cdm-cloud/common/broker
@@ -72,7 +72,7 @@ github.com/datacommand2/cdm-cloud/common/store
 github.com/datacommand2/cdm-cloud/common/sync
 github.com/datacommand2/cdm-cloud/common/sync/internal/etcd
 github.com/datacommand2/cdm-cloud/common/util
-# github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7
+# github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231205055758-216c42add282
 ## explicit
 github.com/datacommand2/cdm-cloud/services/identity/proto
 # github.com/datacommand2/cdm-cloud/services/scheduler v0.0.0-20231129021537-1dc16b41343b
@@ -84,7 +84,6 @@ github.com/datacommand2/cdm-disaster-recovery/common/database/model
 github.com/datacommand2/cdm-disaster-recovery/common/migrator
 github.com/datacommand2/cdm-disaster-recovery/common/mirror
 # github.com/datacommand2/cdm-disaster-recovery/manager v0.0.0-20231129232117-0168f1f49c94
-## explicit
 github.com/datacommand2/cdm-disaster-recovery/manager/proto
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
@@ -156,6 +155,11 @@ github.com/go-git/go-git/v5/utils/merkletrie/filesystem
 github.com/go-git/go-git/v5/utils/merkletrie/index
 github.com/go-git/go-git/v5/utils/merkletrie/internal/frame
 github.com/go-git/go-git/v5/utils/merkletrie/noder
+# github.com/go-micro/plugins/v2/registry/kubernetes v0.0.0-20231124130721-6c2dd051b800
+github.com/go-micro/plugins/v2/registry/kubernetes
+github.com/go-micro/plugins/v2/registry/kubernetes/client
+github.com/go-micro/plugins/v2/registry/kubernetes/client/api
+github.com/go-micro/plugins/v2/registry/kubernetes/client/watch
 # github.com/go-sql-driver/mysql v1.5.0
 github.com/go-sql-driver/mysql
 # github.com/gogo/protobuf v1.3.2
