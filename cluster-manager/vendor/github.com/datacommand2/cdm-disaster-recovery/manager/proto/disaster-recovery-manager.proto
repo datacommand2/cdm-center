@@ -4,7 +4,6 @@ package drms;
 
 import "google/api/annotations.proto";
 import "github.com/datacommand2/cdm-center/cluster-manager/proto/cluster-manager.proto";
-import "github.com/datacommand2/cdm-cloud/services/scheduler/proto/schedule.proto";
 import "github.com/datacommand2/cdm-cloud/services/identity/proto/identity.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -582,7 +581,6 @@ message RecoveryJob {
     string type_code = 5;
     string recovery_point_type_code = 8;
     ProtectionGroupSnapshot recovery_point_snapshot = 9;
-    scheduler.Schedule schedule = 11;
     int64 next_runtime = 12;
     string operation_code = 14;
     string state_code = 15;

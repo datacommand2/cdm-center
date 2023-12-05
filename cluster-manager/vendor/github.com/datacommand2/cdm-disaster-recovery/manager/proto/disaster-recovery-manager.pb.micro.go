@@ -7,7 +7,6 @@ import (
 	fmt "fmt"
 	_ "github.com/datacommand2/cdm-center/cluster-manager/proto"
 	_ "github.com/datacommand2/cdm-cloud/services/identity/proto"
-	_ "github.com/datacommand2/cdm-cloud/services/scheduler/proto"
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/golang/protobuf/ptypes/wrappers"
 	_ "google.golang.org/genproto/googleapis/api/annotations"

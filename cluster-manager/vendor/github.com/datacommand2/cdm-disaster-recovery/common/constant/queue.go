@@ -91,24 +91,6 @@ const (
 	//	 }
 	QueueTriggerRecoveryJobDeleted = "cdm.disaster-recovery.trigger.recovery-job-deleted"
 
-	// QueueAddProtectionGroupSnapshot 보호그룹 스냅샷 생성을 알리는 Queue
-	// message:
-	//   header: {}
-	//   body: <ProtectionGroupID, uint64>
-	QueueAddProtectionGroupSnapshot = "cdm.disaster-recovery.trigger.add-protection-group-snapshot"
-
-	// QueueDeleteProtectionGroupSnapshot 보호그룹 스냅샷 삭제를 알리는 Queue
-	// message:
-	//   header: {}
-	//   body: <ProtectionGroupID, uint64>
-	QueueDeleteProtectionGroupSnapshot = "cdm.disaster-recovery.trigger.delete-protection-group-snapshot"
-
-	// QueueDeletePlanSnapshot 보호그룹의 복구계획 스냅샷 삭제를 알리는 Queue
-	// message:
-	//   header: {}
-	//   body: <drModel.Plan>
-	QueueDeletePlanSnapshot = "cdm.disaster-recovery.trigger.delete-plan-snapshot"
-
 	// QueueSyncPlanListByProtectionGroup 보호그룹 ID로 전체 복구계획 동기화하는 Queue
 	// message:
 	//   header: {}

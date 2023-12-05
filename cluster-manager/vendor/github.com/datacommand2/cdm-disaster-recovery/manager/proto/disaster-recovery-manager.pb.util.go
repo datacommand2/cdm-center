@@ -3,7 +3,6 @@ package drms
 import (
 	"encoding/json"
 	"github.com/datacommand2/cdm-cloud/common/errors"
-	"github.com/datacommand2/cdm-disaster-recovery/common/constant"
 	"github.com/datacommand2/cdm-disaster-recovery/common/database/model"
 )
 
@@ -35,7 +34,7 @@ func (x *RecoveryJob) Model() (*model.Job, error) {
 	}
 
 	m.RecoveryPlanID = x.Plan.Id
-	if x.RecoveryPointTypeCode == constant.RecoveryPointTypeCodeSnapshot && x.RecoveryPointSnapshot != nil {
+	if x.RecoveryPointSnapshot != nil {
 		m.RecoveryPointSnapshotID = &x.RecoveryPointSnapshot.Id
 	}
 

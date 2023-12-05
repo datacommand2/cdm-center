@@ -194,12 +194,6 @@ const (
 const (
 	// RecoveryPointTypeCodeLatest 최신 데이터로 복구
 	RecoveryPointTypeCodeLatest = "dr.recovery.recovery_point.type.latest"
-
-	// RecoveryPointTypeCodeLatestSnapshot 최신 스냅샷으로 복구
-	RecoveryPointTypeCodeLatestSnapshot = "dr.recovery.recovery_point.type.latest_snapshot"
-
-	// RecoveryPointTypeCodeSnapshot 특정 스냅샷으로 복구
-	RecoveryPointTypeCodeSnapshot = "dr.recovery.recovery_point.type.snapshot"
 )
 
 // 재해복구작업 operation
@@ -570,18 +564,6 @@ const (
 
 	// RecoveryPointObjectiveTypeDay 일 단위
 	RecoveryPointObjectiveTypeDay = "recovery.point.objective.type.day"
-)
-
-// 스냅샷 생성주기 시간 단위
-const (
-	// SnapshotIntervalTypeMinutely 분 단위 주기
-	SnapshotIntervalTypeMinutely = "snapshot.interval.type.minutely"
-
-	// SnapshotIntervalTypeHourly 시 단위 주기
-	SnapshotIntervalTypeHourly = "snapshot.interval.type.hourly"
-
-	// SnapshotIntervalTypeDaily 일 단위 주기
-	SnapshotIntervalTypeDaily = "snapshot.interval.type.daily"
 )
 
 // 클러스터 스토리지 상태
