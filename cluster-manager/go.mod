@@ -6,10 +6,9 @@ replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
-	github.com/datacommand2/cdm-cloud/common v0.0.0-20231128060710-080c7906e48b
-	github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7
+	github.com/datacommand2/cdm-cloud/common v0.0.0-20231205042820-988cc8ba20e0
+	github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231205055758-216c42add282
 	github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129233138-279c03db8ad2
-	github.com/datacommand2/cdm-disaster-recovery/manager v0.0.0-20231129232117-0168f1f49c94
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.4.0
 	github.com/jinzhu/copier v0.3.4

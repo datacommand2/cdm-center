@@ -116,11 +116,13 @@ github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsr
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/datacommand2/cdm-center/cluster-manager v0.0.0-20231129223458-a3d561877835/go.mod h1:pMDm/Wllodab7BNV8S+2bMpDhGRaCATsS7G5wtH3x9M=
 github.com/datacommand2/cdm-cloud/common v0.0.0-20231127055611-c20cbc4911cf/go.mod h1:ggpahxiri74mk826mLikJI/Ep6LsQ+ey5ZAFoY1TIMI=
-github.com/datacommand2/cdm-cloud/common v0.0.0-20231128060710-080c7906e48b h1:YPCXa9JyyIPcmlI5NyjvSr3x9SwLza5mjYNm9FxxW04=
 github.com/datacommand2/cdm-cloud/common v0.0.0-20231128060710-080c7906e48b/go.mod h1:TfpYDvr+YhsGDCvnfScKhNbIbrwY+6YMIbzhoSxBQns=
+github.com/datacommand2/cdm-cloud/common v0.0.0-20231205042820-988cc8ba20e0 h1:uIuegnJDRzKOeuIx4pVUFqiZaAP/IO0b6eE9UMHebcE=
+github.com/datacommand2/cdm-cloud/common v0.0.0-20231205042820-988cc8ba20e0/go.mod h1:TfpYDvr+YhsGDCvnfScKhNbIbrwY+6YMIbzhoSxBQns=
 github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231127060302-5d9100aec13c/go.mod h1:/4eYWqbuqBp8hagkjytyMvXqFZagoicuH9iGU1bZ854=
-github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7 h1:zpEmKcyX6zFAByQfHGZvLdRyPsDrMWRjCEzA+GFdzDM=
 github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231129020632-c054325b27f7/go.mod h1:jHe5PquhlIm5UIEuDPW9avEZL7lUOyrqeQcrlildlzQ=
+github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231205055758-216c42add282 h1:9ir9qcUZF44uU8nMoRY9hehr8EH55cNbMgTMItAc8DA=
+github.com/datacommand2/cdm-cloud/services/identity v0.0.0-20231205055758-216c42add282/go.mod h1:10igfCTFJtyOP/09YsXqv5tZ9XMapYNYFL402BprqcY=
 github.com/datacommand2/cdm-cloud/services/scheduler v0.0.0-20231129021537-1dc16b41343b h1:HQZAUsC356Hb4lvJj40/dQmhX0sL81VRMTCRn2fqkOw=
 github.com/datacommand2/cdm-cloud/services/scheduler v0.0.0-20231129021537-1dc16b41343b/go.mod h1:DVVUXGPwJmoaPJXIBb4vo1NSUYB9n4w3/P/xpDnlb64=
 github.com/datacommand2/cdm-disaster-recovery/common v0.0.0-20231129065503-7cad00c52cc9/go.mod h1:N0OSD7KGWiZk0AiUgC7YwHutG+ErnQwleP/1fZs+JZE=
@@ -193,6 +195,7 @@ github.com/go-kit/log v0.1.0/go.mod h1:zbhenjAZHb184qTLMA9ZjW7ThYL0H2mk7Q6pNt4vb
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
 github.com/go-logfmt/logfmt v0.5.0/go.mod h1:wCYkCAKZfumFQihp8CzCvQ3paCTfi41vtzG1KdI/P7A=
+github.com/go-micro/plugins/v2/registry/kubernetes v0.0.0-20231124130721-6c2dd051b800 h1:auBntJc07IQMEfJXyM80+GYYz9Ket6WNRBloZ12QLwU=
 github.com/go-micro/plugins/v2/registry/kubernetes v0.0.0-20231124130721-6c2dd051b800/go.mod h1:5945fyh/S8lEAF0jBtkzhghkm1BE2bQtrTy419xGs8E=
 github.com/go-sql-driver/mysql v1.4.1/go.mod h1:zAC/RDZ24gD3HViQzih4MyKcchzm+sOG5ZlKdlhCg5w=
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
